@@ -19,9 +19,7 @@ class StreamConnection internal constructor(
      * 返回优先级
      */
     fun getPriority(clazz: Class<out FStream>): Int {
-        checkStreamClass(clazz)
-        val item = _mapItem[clazz]
-        return item?.priority ?: 0
+        return _mapItem[clazz]?.priority ?: 0
     }
 
     /**
