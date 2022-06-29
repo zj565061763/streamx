@@ -62,8 +62,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
     }
 
     private fun processMainLogic(isVoid: Boolean, method: Method, args: Array<Any?>?, uuid: String?): Any? {
-        val holder = FStreamManager.getStreamHolder(_streamClass)
-        val listStream = holder?.toCollection()
+        val listStream = FStreamManager.getStreamHolder(_streamClass)?.toCollection()
 
         if (FStreamManager.isDebug) {
             Log.i(
