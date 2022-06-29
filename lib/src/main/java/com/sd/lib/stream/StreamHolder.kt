@@ -28,14 +28,14 @@ internal class StreamHolder(clazz: Class<out FStream>) {
      */
     @Synchronized
     fun add(stream: FStream): Boolean {
-        val result = _streamHolder.add(stream)
-        if (result) {
-            if (_priorityStreamHolder.isNotEmpty()) {
-                // 如果有流对象设置了优先级，则添加新流对象的时候标记为需要重新排序
-                _isNeedSort = true
+        return _streamHolder.add(stream).also { result ->
+            if (result) {
+                if (_priorityStreamHolder.isNotEmpty()) {
+                    // 如果有流对象设置了优先级，则添加新流对象的时候标记为需要重新排序
+                    _isNeedSort = true
+                }
             }
         }
-        return result
     }
 
     /**
