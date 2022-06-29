@@ -6,7 +6,7 @@ import com.sd.lib.stream.factory.WeakCacheStreamFactory
 import com.sd.lib.stream.utils.LibUtils
 
 /**
- * 默认流class管理
+ * 默认流管理
  *
  * 如果代理对象方法触发的时候未找到注册的流对象，则会查找是否存在默认流class，
  * 如果存在默认流class，则用默认流class创建默认流对象来触发，默认流必须包含空构造方法
