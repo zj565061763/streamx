@@ -1,5 +1,7 @@
 package com.sd.lib.stream
 
+import android.app.Activity
+import android.view.View
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import kotlin.reflect.KClass
@@ -150,4 +152,18 @@ fun FStream.registerStream(): StreamConnection {
  */
 fun FStream.unregisterStream() {
     FStreamManager.unregister(this)
+}
+
+/**
+ * [FStreamManager.bindActivity]
+ */
+fun FStream.bindActivity(activity: Activity): Boolean {
+    return FStreamManager.bindActivity(this, activity)
+}
+
+/**
+ * [FStreamManager.bindView]
+ */
+fun FStream.bindView(view: View): Boolean {
+    return FStreamManager.bindView(this, view)
 }
