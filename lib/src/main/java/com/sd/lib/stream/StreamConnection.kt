@@ -32,9 +32,7 @@ class StreamConnection internal constructor(
                 item.setPriority(priority)
             }
         } else {
-            checkStreamClass(clazz)
-            checkClassAssignable(clazz)
-            _mapItem[clazz]?.setPriority(priority)
+            _mapItem[clazz]!!.setPriority(priority)
         }
     }
 
