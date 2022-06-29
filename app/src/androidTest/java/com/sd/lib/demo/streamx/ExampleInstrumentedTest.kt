@@ -90,6 +90,9 @@ class ExampleInstrumentedTest {
 
         proxy.build(builder)
         Assert.assertEquals("0", builder.toString())
+
+        stream0.unregisterStream()
+        stream1.unregisterStream()
     }
 
 
