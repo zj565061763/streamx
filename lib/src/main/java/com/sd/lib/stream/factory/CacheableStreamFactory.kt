@@ -3,7 +3,7 @@ package com.sd.lib.stream.factory
 import com.sd.lib.stream.FStream
 import com.sd.lib.stream.factory.DefaultStreamFactory.CreateParam
 
-abstract class CacheableStreamFactory : SimpleStreamFactory() {
+abstract class CacheableStreamFactory : DefaultStreamFactory {
 
     final override fun create(param: CreateParam): FStream {
         val cache = getCache(param)
@@ -17,7 +17,7 @@ abstract class CacheableStreamFactory : SimpleStreamFactory() {
      * 创建Stream对象
      */
     protected open fun createStream(param: CreateParam): FStream {
-        return super.create(param)
+        return param.classStreamDefault.newInstance()
     }
 
     /**
