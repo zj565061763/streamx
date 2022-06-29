@@ -18,19 +18,19 @@ interface FStream {
     fun getTagForStream(clazz: Class<out FStream>): Any?
 
     class ProxyBuilder {
-        var streamClass: Class<out FStream>? = null
+        internal var streamClass: Class<out FStream>? = null
             private set
 
-        var tag: Any? = null
+        internal var tag: Any? = null
             private set
 
-        var dispatchCallback: DispatchCallback? = null
+        internal var dispatchCallback: DispatchCallback? = null
             private set
 
-        var resultFilter: ResultFilter? = null
+        internal var resultFilter: ResultFilter? = null
             private set
 
-        var isSticky = false
+        internal var isSticky = false
             private set
 
         /**
