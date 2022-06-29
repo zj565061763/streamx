@@ -92,7 +92,7 @@ interface FStream {
         fun afterDispatch(stream: FStream, method: Method, methodParams: Array<Any?>?, methodResult: Any?): Boolean
     }
 
-    interface ResultFilter {
+    fun interface ResultFilter {
         /**
          * 过滤返回值
          *
