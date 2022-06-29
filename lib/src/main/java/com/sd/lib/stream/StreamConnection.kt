@@ -104,7 +104,9 @@ internal abstract class ConnectionItem {
      * 设置停止分发
      */
     fun breakDispatch() {
-        shouldBreakDispatch = true
+        synchronized(this@ConnectionItem) {
+            shouldBreakDispatch = true
+        }
     }
 
     /**
