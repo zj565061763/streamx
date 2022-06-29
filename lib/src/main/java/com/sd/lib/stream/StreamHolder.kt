@@ -1,7 +1,6 @@
 package com.sd.lib.stream
 
 import android.util.Log
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 流对象持有者，保存流接口映射的流对象列表
@@ -14,7 +13,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private val _streamHolder: MutableSet<FStream> = LinkedHashSet()
 
     /** 设置了优先级的流对象  */
-    private val _priorityStreamHolder: MutableMap<FStream, Int> = ConcurrentHashMap()
+    private val _priorityStreamHolder: MutableMap<FStream, Int> = HashMap()
 
     /** 是否需要排序  */
     @Volatile
