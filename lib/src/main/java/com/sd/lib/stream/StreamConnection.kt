@@ -12,7 +12,7 @@ class StreamConnection internal constructor(
     /**
      * 当前连接的所有流接口
      */
-    val streamClasses: Collection<Class<out FStream>>
+    internal val streamClasses: Collection<Class<out FStream>>
         get() = _mapItem.keys
 
     /**
