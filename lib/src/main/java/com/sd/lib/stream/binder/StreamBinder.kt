@@ -8,16 +8,11 @@ internal abstract class StreamBinder<T>(
     stream: FStream,
     target: T,
 ) {
-    private val _stream: WeakReference<FStream>
-    private val _target: WeakReference<T>
+    private val _streamRef = WeakReference(stream)
+    private val _targetRef = WeakReference(target)
 
-    /** 返回要绑定的对象 */
-    val target: T? get() = _target.get()
-
-    init {
-        _stream = WeakReference(stream)
-        _target = WeakReference(target)
-    }
+    /** 要绑定的目标 */
+    val target: T? get() = _targetRef.get()
 
     /**
      * 绑定
@@ -32,7 +27,7 @@ internal abstract class StreamBinder<T>(
      * @return true-成功  false-失败
      */
     protected fun registerStream(): Boolean {
-        val stream = _stream.get() ?: return false
+        val stream = _streamRef.get() ?: return false
         FStreamManager.register(stream)
         return true
     }
@@ -41,7 +36,7 @@ internal abstract class StreamBinder<T>(
      * 取消注册流对象
      */
     protected fun unregisterStream() {
-        val stream = _stream.get() ?: return
+        val stream = _streamRef.get() ?: return
         FStreamManager.unregister(stream)
     }
 
@@ -50,6 +45,6 @@ internal abstract class StreamBinder<T>(
      */
     open fun destroy() {
         unregisterStream()
-        _stream.clear()
+        _streamRef.clear()
     }
 }
