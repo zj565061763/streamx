@@ -8,7 +8,7 @@ import com.sd.lib.stream.FStream
 import java.lang.ref.WeakReference
 
 /**
- * 将流对象和Activity绑定，在[Window.getDecorView]对象被移除的时候取消注册流对象
+ * 将流对象和[Activity]绑定，在[Window.getDecorView]对象被移除的时候取消注册流对象
  */
 internal class ActivityStreamBinder(
     stream: FStream,
