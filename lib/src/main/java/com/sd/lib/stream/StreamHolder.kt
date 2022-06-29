@@ -10,7 +10,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private val _class: Class<out FStream> = clazz
 
     /** 流对象 */
-    private val _streamHolder: MutableSet<FStream> = LinkedHashSet()
+    private val _streamHolder: MutableCollection<FStream> = ArrayList()
 
     /** 设置了优先级的流对象  */
     private val _priorityStreamHolder: MutableMap<FStream, Int> = HashMap()
