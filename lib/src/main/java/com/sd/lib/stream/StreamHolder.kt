@@ -62,7 +62,9 @@ internal class StreamHolder(clazz: Class<out FStream>) {
         if (_streamHolder.size <= 1) return
 
         synchronized(FStreamManager) {
-            _streamHolder.sortWith(StreamPriorityComparatorDesc())
+            _streamHolder.sortByDescending {
+                FStreamManager.getConnection(it)!!.getPriority(_class)
+            }
             _isNeedSort = false
         }
 
@@ -77,33 +79,19 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     fun notifyPriorityChanged(priority: Int, stream: FStream, clazz: Class<out FStream>) {
         synchronized(FStreamManager) {
             if (!_streamHolder.contains(stream)) return
-
             if (priority == 0) {
                 _priorityStreamHolder.remove(stream)
             } else {
                 _priorityStreamHolder[stream] = priority
             }
-
             _isNeedSort = _priorityStreamHolder.isNotEmpty()
-            if (FStreamManager.isDebug) {
-                Log.i(
-                    FStream::class.java.simpleName,
-                    "notifyPriorityChanged priority:${priority} clazz:${clazz.name} priorityStreamHolder size:${_priorityStreamHolder.size} stream:${stream}"
-                )
-            }
         }
-    }
 
-    private inner class StreamPriorityComparatorDesc : Comparator<FStream> {
-        override fun compare(o1: FStream, o2: FStream): Int {
-            val o1Connection = FStreamManager.getConnection(o1)
-            val o2Connection = FStreamManager.getConnection(o2)
-
-            return if (o1Connection != null && o2Connection != null) {
-                o2Connection.getPriority(_class) - o1Connection.getPriority(_class)
-            } else {
-                0
-            }
+        if (FStreamManager.isDebug) {
+            Log.i(
+                FStream::class.java.simpleName,
+                "notifyPriorityChanged priority:${priority} clazz:${clazz.name} priorityStreamHolder size:${_priorityStreamHolder.size} stream:${stream}"
+            )
         }
     }
 }
