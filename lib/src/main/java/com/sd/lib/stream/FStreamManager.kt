@@ -37,10 +37,7 @@ object FStreamManager {
     @Synchronized
     fun register(stream: FStream): StreamConnection {
         val connection = _mapStreamConnection[stream]
-        if (connection != null) {
-            // 该对象已经注册过了
-            return connection
-        }
+        if (connection != null) return connection
 
         val classes = LibUtils.findStreamClass(stream.javaClass)
         for (clazz in classes) {
@@ -72,7 +69,6 @@ object FStreamManager {
     @Synchronized
     fun unregister(stream: FStream) {
         val connection = _mapStreamConnection.remove(stream) ?: return
-
         val classes = connection.streamClasses
         for (clazz in classes) {
             val holder = _mapStreamHolder[clazz] ?: continue
