@@ -85,8 +85,8 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             }
 
             if (FStreamManager.isDebug) {
-                val returnLog = if (isVoid) "" else result
-                Log.i(FStream::class.java.simpleName, "notify default stream:${defaultStream} return:${returnLog} uuid:${uuid}")
+                val returnLog = if (isVoid) "" else "return:${result}"
+                Log.i(FStream::class.java.simpleName, "notify default stream:${defaultStream} ${returnLog} uuid:${uuid}")
             }
             return result
         }
