@@ -52,34 +52,31 @@ internal class StreamHolder(clazz: Class<out FStream>) {
      * 返回流集合
      */
     @Synchronized
-    fun toCollection(): Array<FStream> {
-        return if (_isNeedSort) {
-            sort()
-        } else {
-            _streamHolder.toTypedArray()
-        }
+    fun toCollection(): Collection<FStream> {
+        sort()
+        return _streamHolder
     }
 
     /**
      * 排序
      */
-    private fun sort(): Array<FStream> {
-        val array = _streamHolder.toTypedArray()
-        if (array.size > 1) {
-            // 排序
-            array.sortWith(StreamPriorityComparatorDesc())
+    private fun sort() {
+        if (!_isNeedSort) return
+        if (_streamHolder.size <= 1) return
 
-            // 把排序后的对象保存到容器
-            _streamHolder.clear()
-            _streamHolder.addAll(array)
+        // 转数组排序
+        val array = _streamHolder.toTypedArray().also {
+            it.sortWith(StreamPriorityComparatorDesc())
         }
 
+        // 把排序后的数组保存到容器
+        _streamHolder.clear()
+        _streamHolder.addAll(array)
         _isNeedSort = false
 
         if (FStreamManager.isDebug) {
             Log.i(FStream::class.java.simpleName, "sort stream for class:${_class.name}")
         }
-        return array
     }
 
     /**
