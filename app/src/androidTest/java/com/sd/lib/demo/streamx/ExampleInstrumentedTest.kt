@@ -59,6 +59,39 @@ class ExampleInstrumentedTest {
         builder.clear()
     }
 
+    @Test
+    fun testStreamTag() {
+        val stream0 = object : TestBuildStream {
+            override fun build(builder: StringBuilder) {
+                builder.append(0)
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return "none null tag"
+            }
+        }
+        val stream1 = object : TestBuildStream {
+            override fun build(builder: StringBuilder) {
+                builder.append(1)
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+
+        stream0.registerStream()
+        stream1.registerStream()
+
+        val builder = StringBuilder()
+        val proxy = TestBuildStream::class.buildProxy() {
+            setTag("none null tag")
+        }
+
+        proxy.build(builder)
+        Assert.assertEquals("0", builder.toString())
+    }
+
 
     @Test
     fun testNormal() {
