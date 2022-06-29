@@ -38,33 +38,29 @@ interface FStream {
         /**
          * 设置代理对象的tag
          */
-        fun setTag(tag: Any?): ProxyBuilder {
+        fun setTag(tag: Any?) = apply {
             this.tag = tag
-            return this
         }
 
         /**
          * 设置流对象方法被通知之前回调
          */
-        fun setBeforeDispatchCallback(callback: BeforeDispatchCallback?): ProxyBuilder {
+        fun setBeforeDispatchCallback(callback: BeforeDispatchCallback?) = apply {
             this.beforeDispatchCallback = callback
-            return this
         }
 
         /**
          * 设置流对象方法被通知之后回调
          */
-        fun setAfterDispatchCallback(callback: AfterDispatchCallback?): ProxyBuilder {
+        fun setAfterDispatchCallback(callback: AfterDispatchCallback?) = apply {
             this.afterDispatchCallback = callback
-            return this
         }
 
         /**
          * 设置返回值过滤对象
          */
-        fun setResultFilter(filter: ResultFilter?): ProxyBuilder {
+        fun setResultFilter(filter: ResultFilter?) = apply {
             this.resultFilter = filter
-            return this
         }
 
         /**
