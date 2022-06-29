@@ -106,6 +106,7 @@ class ExampleInstrumentedTest {
         Assert.assertEquals(null, proxy.getContent("http"))
     }
 
+    @Test
     fun testPriority() {
         val stream0 = object : TestBuildStream {
             override fun build(builder: StringBuilder) {
