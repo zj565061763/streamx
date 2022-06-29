@@ -1,6 +1,7 @@
 package com.sd.lib.demo.streamx
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sd.lib.demo.streamx.utils.TestBuildStream
 import com.sd.lib.demo.streamx.utils.TestDefaultStream
 import com.sd.lib.demo.streamx.utils.TestStream
 import com.sd.lib.stream.*
@@ -16,6 +17,49 @@ import java.lang.reflect.Method
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+    @Test
+    fun testRegisterUnregister() {
+        val stream0 = object : TestBuildStream {
+            override fun build(builder: StringBuilder) {
+                builder.append(0)
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+        val stream1 = object : TestBuildStream {
+            override fun build(builder: StringBuilder) {
+                builder.append(1)
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+
+        stream0.registerStream()
+        stream1.registerStream()
+
+        val builder = StringBuilder()
+        val proxy = TestBuildStream::class.buildProxy()
+
+        proxy.build(builder)
+        Assert.assertEquals("01", builder.toString())
+        builder.clear()
+
+        stream0.unregisterStream()
+        proxy.build(builder)
+        Assert.assertEquals("1", builder.toString())
+        builder.clear()
+
+        stream1.unregisterStream()
+        proxy.build(builder)
+        Assert.assertEquals("", builder.toString())
+        builder.clear()
+    }
+
+
     @Test
     fun testNormal() {
         DefaultStreamManager.register(TestDefaultStream::class.java)
