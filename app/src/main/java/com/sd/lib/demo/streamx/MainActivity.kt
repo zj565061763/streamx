@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sd.lib.stream.FStream
 import com.sd.lib.stream.FStreamManager
+import com.sd.lib.stream.registerStream
+import com.sd.lib.stream.unregisterStream
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,10 +13,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // 注册流对象
-        FStreamManager.register(_callback1)
+        _callback1.registerStream()
 
         // 注册流对象，并设置优先级，数值越大越先被通知，默认优先级：0
-        FStreamManager.register(_callback2).setPriority(-1)
+        _callback2.registerStream().setPriority(-1)
 
         // 绑定流对象，绑定之后会自动取消注册
         FStreamManager.bindActivity(_callback3, this)
@@ -53,9 +55,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         /**
-         * [FStreamManager.register]注册的对象，需要手动取消注册
+         * 手动取消注册
          */
-        FStreamManager.unregister(_callback1)
-        FStreamManager.unregister(_callback2)
+        _callback1.unregisterStream()
+        _callback2.unregisterStream()
     }
 }

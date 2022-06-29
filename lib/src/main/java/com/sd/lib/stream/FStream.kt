@@ -124,3 +124,17 @@ interface FStream {
 fun <T : FStream> KClass<T>.buildProxy(block: FStream.ProxyBuilder.() -> Unit = {}): T {
     return FStream.buildProxy(this.java, block)
 }
+
+/**
+ * 注册[FStreamManager.register]
+ */
+fun FStream.registerStream(): StreamConnection {
+    return FStreamManager.register(this)
+}
+
+/**
+ * 取消注册[FStreamManager.unregister]
+ */
+fun FStream.unregisterStream() {
+    FStreamManager.unregister(this)
+}
