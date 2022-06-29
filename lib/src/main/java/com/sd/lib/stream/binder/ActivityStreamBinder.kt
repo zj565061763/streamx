@@ -21,12 +21,12 @@ internal class ActivityStreamBinder(
         val activity = target ?: return false
         if (activity.isFinishing) return false
         val decorView = _decorViewRef.get() ?: return false
-        if (registerStream()) {
-            decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
-            decorView.addOnAttachStateChangeListener(_onAttachStateChangeListener)
-            return true
+        return registerStream().also {
+            if (it) {
+                decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+                decorView.addOnAttachStateChangeListener(_onAttachStateChangeListener)
+            }
         }
-        return false
     }
 
     private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
