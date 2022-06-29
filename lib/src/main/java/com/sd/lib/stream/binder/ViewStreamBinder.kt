@@ -1,7 +1,6 @@
 package com.sd.lib.stream.binder
 
 import android.app.Activity
-import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import com.sd.lib.stream.FStream
@@ -9,8 +8,10 @@ import com.sd.lib.stream.FStream
 /**
  * 将流对象和[View]绑定，监听[View.OnAttachStateChangeListener]自动注册和取消注册
  */
-internal class ViewStreamBinder : StreamBinder<View> {
-    constructor(stream: FStream, target: View) : super(stream, target)
+internal class ViewStreamBinder(
+    stream: FStream,
+    target: View,
+) : StreamBinder<View>(stream, target) {
 
     override fun bind(): Boolean {
         val target = target ?: return false
@@ -25,17 +26,15 @@ internal class ViewStreamBinder : StreamBinder<View> {
             target.addOnAttachStateChangeListener(_onAttachStateChangeListener)
         }
 
-        return if (isAttached(target)) {
-            registerStream().also {
-                if (it) listenerTask.run()
-            }
+        return if (target.isAttachedToWindow) {
+            registerStream().also { if (it) listenerTask.run() }
         } else {
             listenerTask.run()
             true
         }
     }
 
-    private val _onAttachStateChangeListener: OnAttachStateChangeListener = object : OnAttachStateChangeListener {
+    private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
         override fun onViewAttachedToWindow(v: View) {
             registerStream()
         }
@@ -48,16 +47,5 @@ internal class ViewStreamBinder : StreamBinder<View> {
     override fun destroy() {
         super.destroy()
         target?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
-    }
-
-    companion object {
-        @JvmStatic
-        private fun isAttached(view: View): Boolean {
-            return if (Build.VERSION.SDK_INT >= 19) {
-                view.isAttachedToWindow
-            } else {
-                view.windowToken != null
-            }
-        }
     }
 }
