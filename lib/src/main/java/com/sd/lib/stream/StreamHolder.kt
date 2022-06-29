@@ -43,9 +43,9 @@ internal class StreamHolder(clazz: Class<out FStream>) {
      */
     @Synchronized
     fun remove(stream: FStream): Boolean {
-        val result = _streamHolder.remove(stream)
-        _priorityStreamHolder.remove(stream)
-        return result
+        return _streamHolder.remove(stream).also {
+            _priorityStreamHolder.remove(stream)
+        }
     }
 
     /**
