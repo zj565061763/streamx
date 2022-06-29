@@ -10,17 +10,12 @@ import java.lang.ref.WeakReference
 /**
  * 将流对象和Activity绑定，在[Window.getDecorView]对象被移除的时候取消注册流对象
  */
-internal class ActivityStreamBinder : StreamBinder<Activity> {
-    private val _decorView: WeakReference<View>
+internal class ActivityStreamBinder(
+    stream: FStream,
+    target: Activity,
+) : StreamBinder<Activity>(stream, target) {
 
-    constructor(stream: FStream, target: Activity) : super(stream, target) {
-        val window = target.window
-            ?: throw RuntimeException("Bind stream failed because activity's window is null")
-        val decorView = window.decorView
-            ?: throw RuntimeException("Bind stream failed because activity's window DecorView is null")
-
-        _decorView = WeakReference(decorView)
-    }
+    private val _decorViewRef: WeakReference<View>
 
     override fun bind(): Boolean {
         val activity = target
@@ -28,7 +23,7 @@ internal class ActivityStreamBinder : StreamBinder<Activity> {
             return false
         }
 
-        val decorView = _decorView.get() ?: return false
+        val decorView = _decorViewRef.get() ?: return false
 
         if (registerStream()) {
             decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
@@ -38,9 +33,8 @@ internal class ActivityStreamBinder : StreamBinder<Activity> {
         return false
     }
 
-    private val _onAttachStateChangeListener: OnAttachStateChangeListener = object : OnAttachStateChangeListener {
+    private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
         override fun onViewAttachedToWindow(v: View) {
-
         }
 
         override fun onViewDetachedFromWindow(v: View) {
@@ -50,6 +44,11 @@ internal class ActivityStreamBinder : StreamBinder<Activity> {
 
     override fun destroy() {
         super.destroy()
-        _decorView.get()?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+        _decorViewRef.get()?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+    }
+
+    init {
+        val window = requireNotNull(target.window) { "Bind stream failed because activity's window is null" }
+        _decorViewRef = WeakReference(window.decorView)
     }
 }
