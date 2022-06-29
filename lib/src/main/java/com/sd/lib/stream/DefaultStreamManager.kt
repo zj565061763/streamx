@@ -21,31 +21,36 @@ object DefaultStreamManager {
     /**
      * 注册默认流class
      */
-    @Synchronized
+    @JvmStatic
     fun register(defaultClass: Class<out FStream>) {
-        val classes = LibUtils.findStreamClass(defaultClass)
-        for (item in classes) {
-            _mapDefaultStreamClass[item] = defaultClass
+        synchronized(this@DefaultStreamManager) {
+            val classes = LibUtils.findStreamClass(defaultClass)
+            for (item in classes) {
+                _mapDefaultStreamClass[item] = defaultClass
+            }
         }
     }
 
     /**
      * 取消注册默认流class
      */
-    @Synchronized
+    @JvmStatic
     fun unregister(defaultClass: Class<out FStream>) {
-        val classes = LibUtils.findStreamClass(defaultClass)
-        for (item in classes) {
-            _mapDefaultStreamClass.remove(item)
+        synchronized(this@DefaultStreamManager) {
+            val classes = LibUtils.findStreamClass(defaultClass)
+            for (item in classes) {
+                _mapDefaultStreamClass.remove(item)
+            }
         }
     }
 
     /**
      * 返回默认流对象
      */
-    @Synchronized
     internal fun getStream(clazz: Class<out FStream>): FStream? {
-        val defaultClass = _mapDefaultStreamClass[clazz] ?: return null
-        return streamFactory.create(CreateParam(clazz, defaultClass))
+        synchronized(this@DefaultStreamManager) {
+            val defaultClass = _mapDefaultStreamClass[clazz] ?: return null
+            return streamFactory.create(CreateParam(clazz, defaultClass))
+        }
     }
 }
