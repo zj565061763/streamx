@@ -2,6 +2,7 @@ package com.sd.lib.stream
 
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
+import kotlin.reflect.KClass
 
 /**
  * 流接口
@@ -126,4 +127,11 @@ interface FStream {
             return builder.build(clazz)
         }
     }
+}
+
+/**
+ * 创建代理对象
+ */
+fun <T : FStream> KClass<T>.buildProxy(block: FStream.ProxyBuilder.() -> Unit = {}): T {
+    return FStream.buildProxy(this.java, block)
 }
