@@ -66,7 +66,7 @@ class ExampleInstrumentedTest {
                 builder.append(0)
             }
 
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+            override fun getTagForStream(clazz: Class<out FStream>): Any {
                 return "none null tag"
             }
         }
@@ -104,6 +104,47 @@ class ExampleInstrumentedTest {
 
         DefaultStreamManager.unregister(TestDefaultStream::class.java)
         Assert.assertEquals(null, proxy.getContent("http"))
+    }
+
+    fun testPriority() {
+        val stream0 = object : TestBuildStream {
+            override fun build(builder: StringBuilder) {
+                builder.append(0)
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+        val stream1 = object : TestBuildStream {
+            override fun build(builder: StringBuilder) {
+                builder.append(1)
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+        val stream2 = object : TestBuildStream {
+            override fun build(builder: StringBuilder) {
+                builder.append(2)
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+        stream0.registerStream().setPriority(-1)
+        stream1.registerStream().setPriority(1)
+        stream2.registerStream()
+
+        Assert.assertEquals(-1, FStreamManager.getConnection(stream0)!!.getPriority(TestBuildStream::class.java))
+        Assert.assertEquals(1, FStreamManager.getConnection(stream1)!!.getPriority(TestBuildStream::class.java))
+        Assert.assertEquals(0, FStreamManager.getConnection(stream2)!!.getPriority(TestBuildStream::class.java))
+
+        stream0.unregisterStream()
+        stream1.unregisterStream()
+        stream2.unregisterStream()
     }
 
     @Test
