@@ -62,19 +62,19 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
     }
 
     private fun processMainLogic(isVoid: Boolean, method: Method, args: Array<Any?>?, uuid: String?): Any? {
-        val listStream = FStreamManager.getStreamHolder(_streamClass)?.toCollection()
+        val listStream = FStreamManager.getStreamHolder(_streamClass)?.toCollection() ?: listOf()
 
         if (FStreamManager.isDebug) {
             Log.i(
                 FStream::class.java.simpleName, "notify -----> $method"
                         + " arg:${(if (args == null) "" else Arrays.toString(args))}"
                         + " tag:${_tag}"
-                        + " count:${listStream?.size ?: 0}"
+                        + " count:${listStream.size}"
                         + " uuid:${uuid}"
             )
         }
 
-        if (listStream.isNullOrEmpty()) {
+        if (listStream.isEmpty()) {
             // 尝试创建默认流对象
             val defaultStream = DefaultStreamManager.getStream(_streamClass) ?: return null
             val result = if (args != null) {
