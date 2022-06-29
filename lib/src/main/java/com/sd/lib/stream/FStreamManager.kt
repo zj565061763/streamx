@@ -161,28 +161,4 @@ object FStreamManager {
     internal fun getStreamHolder(clazz: Class<out FStream>): StreamHolder? {
         return _mapStreamHolder[clazz]
     }
-
-    /**
-     * [DefaultStreamManager.register]
-     */
-    @Deprecated("")
-    fun registerDefaultStream(clazz: Class<out FStream>) {
-        DefaultStreamManager.register(clazz)
-    }
-
-    /**
-     * 用[bindActivity]替代
-     */
-    @Deprecated("")
-    fun bindStream(stream: FStream, target: Activity): Boolean {
-        return bindActivity(stream, target)
-    }
-
-    /**
-     * 用[bindView]替代
-     */
-    @Deprecated("")
-    fun bindStream(stream: FStream, target: View): Boolean {
-        return bindView(stream, target)
-    }
 }
