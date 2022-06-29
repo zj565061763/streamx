@@ -138,9 +138,9 @@ class ExampleInstrumentedTest {
         stream1.registerStream().setPriority(1)
         stream2.registerStream()
 
-        Assert.assertEquals(-1, FStreamManager.getConnection(stream0)!!.getPriority(TestBuildStream::class.java))
-        Assert.assertEquals(1, FStreamManager.getConnection(stream1)!!.getPriority(TestBuildStream::class.java))
-        Assert.assertEquals(0, FStreamManager.getConnection(stream2)!!.getPriority(TestBuildStream::class.java))
+        Assert.assertEquals(-1, FStreamManager.getConnection(stream0)!!.getPriority())
+        Assert.assertEquals(1, FStreamManager.getConnection(stream1)!!.getPriority())
+        Assert.assertEquals(0, FStreamManager.getConnection(stream2)!!.getPriority())
 
         stream0.unregisterStream()
         stream1.unregisterStream()

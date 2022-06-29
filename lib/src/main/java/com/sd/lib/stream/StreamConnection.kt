@@ -18,8 +18,11 @@ class StreamConnection internal constructor(
     /**
      * 返回优先级
      */
-    fun getPriority(clazz: Class<out FStream>): Int {
-        return _mapItem[clazz]!!.priority
+    @JvmOverloads
+    fun getPriority(clazz: Class<out FStream>? = null): Int {
+        if (clazz != null) return _mapItem[clazz]!!.priority
+        check(_mapItem.size == 1)
+        return _mapItem[_mapItem.keys.first()]!!.priority
     }
 
     /**
