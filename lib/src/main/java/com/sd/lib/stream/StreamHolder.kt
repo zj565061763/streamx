@@ -11,7 +11,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private val _class: Class<out FStream> = clazz
 
     /** 流对象 */
-    private val _streamHolder: MutableCollection<FStream> = CopyOnWriteArrayList()
+    private val _streamHolder: MutableList<FStream> = CopyOnWriteArrayList()
 
     /** 设置了优先级的流对象  */
     private val _priorityStreamHolder: MutableMap<FStream, Int> = HashMap()
@@ -62,14 +62,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
         if (_streamHolder.size <= 1) return
 
         synchronized(FStreamManager) {
-            // 排序
-            val array = _streamHolder.toTypedArray().also {
-                it.sortWith(StreamPriorityComparatorDesc())
-            }
-
-            // 把排序后的数组保存到容器
-            _streamHolder.clear()
-            _streamHolder.addAll(array)
+            _streamHolder.sortWith(StreamPriorityComparatorDesc())
             _isNeedSort = false
         }
 
