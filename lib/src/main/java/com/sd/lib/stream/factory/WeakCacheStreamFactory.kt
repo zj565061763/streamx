@@ -17,8 +17,7 @@ class WeakCacheStreamFactory : CacheableStreamFactory() {
     private val _mapReference: MutableMap<WeakReference<FStream>, Class<out FStream>> = HashMap()
 
     override fun getCache(param: CreateParam): FStream? {
-        val reference = _mapStream[param.classStream]
-        return reference?.get()
+        return _mapStream[param.classStream]?.get()
     }
 
     override fun setCache(param: CreateParam, stream: FStream) {
