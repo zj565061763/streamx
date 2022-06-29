@@ -85,11 +85,14 @@ class ExampleInstrumentedTest {
         }
 
 
-        Assert.assertEquals("1", proxy.getContent("http"))
-        Assert.assertEquals(3, listResult.size)
-        Assert.assertEquals("3", listResult[0])
-        Assert.assertEquals("2", listResult[1])
-        Assert.assertEquals("1", listResult[2])
+        proxy.getContent("http").let { result ->
+            Assert.assertEquals("1", result)
+            Assert.assertEquals(3, listResult.size)
+            Assert.assertEquals("3", listResult[0])
+            Assert.assertEquals("2", listResult[1])
+            Assert.assertEquals("1", listResult[2])
+        }
+
 
         val stream4 = object : TestStream {
             override fun getContent(url: String): String {
@@ -98,18 +101,21 @@ class ExampleInstrumentedTest {
             }
 
             override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                Assert.assertEquals(TestStream::class.java, clazz)
                 return null
             }
-        }
-        FStreamManager.register(stream4)
+        }.also { it.registerStream() }
 
-        listResult.clear()
-        Assert.assertEquals("1", proxy.getContent("http"))
-        Assert.assertEquals(4, listResult.size)
-        Assert.assertEquals("3", listResult[0])
-        Assert.assertEquals("2", listResult[1])
-        Assert.assertEquals("4", listResult[2])
-        Assert.assertEquals("1", listResult[3])
+
+        proxy.getContent("http").let { result ->
+            Assert.assertEquals("1", result)
+            Assert.assertEquals(4, listResult.size)
+            Assert.assertEquals("3", listResult[0])
+            Assert.assertEquals("2", listResult[1])
+            Assert.assertEquals("4", listResult[2])
+            Assert.assertEquals("1", listResult[3])
+        }
+
 
         DefaultStreamManager.unregister(TestDefaultStream::class.java)
         FStreamManager.run {
