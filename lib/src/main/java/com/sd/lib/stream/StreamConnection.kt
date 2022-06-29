@@ -30,12 +30,12 @@ class StreamConnection internal constructor(
      */
     @JvmOverloads
     fun setPriority(priority: Int, clazz: Class<out FStream>? = null) {
-        if (clazz == null) {
+        if (clazz != null) {
+            _mapItem[clazz]!!.setPriority(priority)
+        } else {
             for (item in _mapItem.values) {
                 item.setPriority(priority)
             }
-        } else {
-            _mapItem[clazz]!!.setPriority(priority)
         }
     }
 
