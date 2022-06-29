@@ -18,13 +18,9 @@ internal class ActivityStreamBinder(
     private val _decorViewRef: WeakReference<View>
 
     override fun bind(): Boolean {
-        val activity = target
-        if (activity == null || activity.isFinishing) {
-            return false
-        }
-
+        val activity = target ?: return false
+        if (activity.isFinishing) return false
         val decorView = _decorViewRef.get() ?: return false
-
         if (registerStream()) {
             decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
             decorView.addOnAttachStateChangeListener(_onAttachStateChangeListener)
