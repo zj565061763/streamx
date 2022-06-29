@@ -7,7 +7,7 @@ import android.view.View.OnAttachStateChangeListener
 import com.sd.lib.stream.FStream
 
 /**
- * 监听[View.OnAttachStateChangeListener]自动注册和取消注册流对象
+ * 将流对象和[View]绑定，监听[View.OnAttachStateChangeListener]自动注册和取消注册
  */
 internal class ViewStreamBinder : StreamBinder<View> {
     constructor(stream: FStream, target: View) : super(stream, target)
