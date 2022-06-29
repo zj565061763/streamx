@@ -61,17 +61,14 @@ class StreamConnection internal constructor(
     }
 
     init {
-        val map = HashMap<Class<out FStream>, ConnectionItem>()
-        for (item in classes) {
-            checkStreamClass(item)
-            map[item] = object : ConnectionItem(item) {
+        val mapItem = classes.associateWith { item ->
+            object : ConnectionItem(item) {
                 override fun onPriorityChanged(priority: Int, clazz: Class<out FStream>) {
-                    val holder = FStreamManager.getStreamHolder(clazz)
-                    holder?.notifyPriorityChanged(priority, stream, clazz)
+                    FStreamManager.getStreamHolder(clazz)?.notifyPriorityChanged(priority, stream, clazz)
                 }
             }
         }
-        _mapItem = Collections.unmodifiableMap(map)
+        _mapItem = Collections.unmodifiableMap(mapItem)
     }
 }
 
