@@ -7,19 +7,16 @@ abstract class CacheableStreamFactory : SimpleStreamFactory() {
 
     final override fun create(param: CreateParam): FStream {
         val cache = getCache(param)
-        if (cache != null) {
-            return cache
+        if (cache != null) return cache
+        return createStream(param).also {
+            setCache(param, it)
         }
-
-        val stream = createStream(param)
-        setCache(param, stream)
-        return stream
     }
 
     /**
      * 创建Stream对象
      */
-    protected fun createStream(param: CreateParam): FStream {
+    protected open fun createStream(param: CreateParam): FStream {
         return super.create(param)
     }
 
