@@ -41,6 +41,9 @@ class ExampleInstrumentedTest {
         stream0.registerStream()
         stream1.registerStream()
 
+        Assert.assertNotNull(FStreamManager.getConnection(stream0))
+        Assert.assertNotNull(FStreamManager.getConnection(stream1))
+
         val builder = StringBuilder()
         val proxy = TestBuildStream::class.buildProxy()
 
@@ -57,6 +60,9 @@ class ExampleInstrumentedTest {
         proxy.build(builder)
         Assert.assertEquals("", builder.toString())
         builder.clear()
+
+        Assert.assertNull(FStreamManager.getConnection(stream0))
+        Assert.assertNull(FStreamManager.getConnection(stream1))
     }
 
     @Test
