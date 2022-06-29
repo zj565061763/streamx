@@ -96,8 +96,8 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
         var result: Any? = null
         var index = 0
-        for (item in listStream) {
-            val connection = FStreamManager.getConnection(item)
+        for (stream in listStream) {
+            val connection = FStreamManager.getConnection(stream)
             if (connection == null) {
                 if (FStreamManager.isDebug) {
                     Log.e(FStream::class.java.simpleName, "${StreamConnection::class.java.simpleName} is null uuid:${uuid}")
@@ -105,11 +105,11 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 continue
             }
 
-            if (item.getTagForStream(_streamClass) != _tag) {
+            if (stream.getTagForStream(_streamClass) != _tag) {
                 continue
             }
 
-            if (_beforeDispatchCallback?.dispatch(item, method, args) == true) {
+            if (_beforeDispatchCallback?.dispatch(stream, method, args) == true) {
                 if (FStreamManager.isDebug) {
                     Log.i(FStream::class.java.simpleName, "dispatch broken before uuid:${uuid}")
                 }
@@ -125,9 +125,9 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
                     // 调用流对象方法
                     itemResult = if (args != null) {
-                        method.invoke(item, *args)
+                        method.invoke(stream, *args)
                     } else {
-                        method.invoke(item)
+                        method.invoke(stream)
                     }
 
                     shouldBreakDispatch = connectionItem.shouldBreakDispatch
@@ -140,7 +140,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                     FStream::class.java.simpleName, "notify"
                             + " index:${index}"
                             + " return:${if (isVoid) "" else itemResult}"
-                            + " stream:$${item}"
+                            + " stream:$${stream}"
                             + " shouldBreakDispatch:${shouldBreakDispatch}"
                             + " uuid:${uuid}"
                 )
@@ -151,7 +151,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 listResult!!.add(itemResult)
             }
 
-            if (_afterDispatchCallback?.dispatch(item, method, args, itemResult) == true) {
+            if (_afterDispatchCallback?.dispatch(stream, method, args, itemResult) == true) {
                 if (FStreamManager.isDebug) {
                     Log.i(FStream::class.java.simpleName, "dispatch broken after uuid:${uuid}")
                 }
