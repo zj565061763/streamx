@@ -42,8 +42,14 @@ class StreamConnection internal constructor(
     /**
      * 停止分发
      */
-    fun breakDispatch(clazz: Class<out FStream>) {
-        _mapItem[clazz]!!.breakDispatch()
+    @JvmOverloads
+    fun breakDispatch(clazz: Class<out FStream>? = null) {
+        if (clazz != null) {
+            _mapItem[clazz]!!.breakDispatch()
+        } else {
+            check(_mapItem.size == 1)
+            _mapItem.values.first().breakDispatch()
+        }
     }
 
     internal fun getItem(clazz: Class<out FStream>): ConnectionItem {

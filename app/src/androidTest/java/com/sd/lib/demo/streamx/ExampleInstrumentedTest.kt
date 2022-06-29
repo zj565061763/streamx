@@ -8,7 +8,6 @@ import com.sd.lib.stream.*
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.reflect.Method
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -336,9 +335,20 @@ class ExampleInstrumentedTest {
 
     @Test
     fun testDispatchBreak() {
+        val stream0 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "0"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
+                FStreamManager.getConnection(this)!!.breakDispatch()
                 return "1"
             }
 
@@ -346,11 +356,9 @@ class ExampleInstrumentedTest {
                 return null
             }
         }
-
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
-                FStreamManager.getConnection(this)!!.breakDispatch(TestStream::class.java)
                 return "2"
             }
 
@@ -359,43 +367,24 @@ class ExampleInstrumentedTest {
             }
         }
 
-        val stream3 = object : TestStream {
-            override fun getContent(url: String): String {
-                Assert.assertEquals("http", url)
-                return "3"
-            }
+        stream0.registerStream()
+        stream1.registerStream()
+        stream2.registerStream()
 
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
+        val proxy = TestStream::class.buildProxy {
+            setResultFilter { _, _, results ->
+                Assert.assertEquals(2, results.size)
+                Assert.assertEquals("0", results[0])
+                Assert.assertEquals("1", results[1])
+                results.last()
             }
         }
-
-        FStreamManager.run {
-            this.register(stream1)
-            this.register(stream2)
-            this.register(stream3)
-        }
-
-        val listResult = mutableListOf<Any?>()
-        val proxy = FStream.ProxyBuilder()
-            .setResultFilter(object : FStream.ResultFilter {
-                override fun filter(method: Method, methodParams: Array<Any?>?, results: List<Any?>): Any? {
-                    listResult.addAll(results)
-                    return results.last()
-                }
-            })
-            .build(TestStream::class.java)
 
         val result = proxy.getContent("http")
-        Assert.assertEquals("2", result)
-        Assert.assertEquals(2, listResult.size)
-        Assert.assertEquals("1", listResult[0])
-        Assert.assertEquals("2", listResult[1])
+        Assert.assertEquals("1", result)
 
-        FStreamManager.run {
-            this.unregister(stream1)
-            this.unregister(stream2)
-            this.unregister(stream3)
-        }
+        stream0.unregisterStream()
+        stream1.unregisterStream()
+        stream2.unregisterStream()
     }
 }
