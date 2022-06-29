@@ -62,9 +62,9 @@ class StreamConnection internal constructor(
 
     init {
         val mapItem = classes.associateWith { item ->
-            object : ConnectionItem(item) {
-                override fun onPriorityChanged(priority: Int, clazz: Class<out FStream>) {
-                    FStreamManager.getStreamHolder(clazz)?.notifyPriorityChanged(priority, stream, clazz)
+            object : ConnectionItem() {
+                override fun onPriorityChanged(priority: Int) {
+                    FStreamManager.getStreamHolder(item)?.notifyPriorityChanged(priority, stream, item)
                 }
             }
         }
@@ -72,9 +72,7 @@ class StreamConnection internal constructor(
     }
 }
 
-internal abstract class ConnectionItem(clazz: Class<out FStream>) {
-    private val _class = clazz
-
+internal abstract class ConnectionItem {
     /** 优先级  */
     @Volatile
     var priority = 0
@@ -98,7 +96,7 @@ internal abstract class ConnectionItem(clazz: Class<out FStream>) {
             }
         }.let { changed ->
             if (changed) {
-                onPriorityChanged(priority, _class)
+                onPriorityChanged(priority)
             }
         }
     }
@@ -120,5 +118,5 @@ internal abstract class ConnectionItem(clazz: Class<out FStream>) {
     /**
      * 优先级变化回调
      */
-    protected abstract fun onPriorityChanged(priority: Int, clazz: Class<out FStream>)
+    protected abstract fun onPriorityChanged(priority: Int)
 }
