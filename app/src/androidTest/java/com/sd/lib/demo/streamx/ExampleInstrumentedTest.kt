@@ -97,9 +97,24 @@ class ExampleInstrumentedTest {
 
     @Test
     fun testDefaultStream() {
+        val proxy = TestStream::class.buildProxy()
         DefaultStreamManager.register(TestDefaultStream::class.java)
 
-        val proxy = TestStream::class.buildProxy()
+        val stream0 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "0"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+
+        stream0.registerStream()
+        Assert.assertEquals("0", proxy.getContent("http"))
+
+        stream0.unregisterStream()
         Assert.assertEquals("default@http", proxy.getContent("http"))
 
         DefaultStreamManager.unregister(TestDefaultStream::class.java)
