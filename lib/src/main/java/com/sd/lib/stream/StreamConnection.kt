@@ -40,22 +40,11 @@ class StreamConnection internal constructor(
      * 停止分发
      */
     fun breakDispatch(clazz: Class<out FStream>) {
-        checkStreamClass(clazz)
-        checkClassAssignable(clazz)
-        _mapItem[clazz]?.breakDispatch()
+        _mapItem[clazz]!!.breakDispatch()
     }
 
-    internal fun getItem(clazz: Class<out FStream>): ConnectionItem? {
-        checkStreamClass(clazz)
-        return _mapItem[clazz]
-    }
-
-    private fun checkClassAssignable(clazz: Class<out FStream>) {
-        require(clazz.isAssignableFrom(_stream.javaClass)) { "class is not assignable from ${_stream.javaClass.name} class:${clazz.name}" }
-    }
-
-    private fun checkStreamClass(clazz: Class<out FStream>) {
-        require(clazz.isInterface) { "class must be an interface class:${clazz.name}" }
+    internal fun getItem(clazz: Class<out FStream>): ConnectionItem {
+        return _mapItem[clazz]!!
     }
 
     init {

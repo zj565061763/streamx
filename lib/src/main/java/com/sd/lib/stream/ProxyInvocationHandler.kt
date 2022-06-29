@@ -123,7 +123,7 @@ internal class ProxyInvocationHandler : InvocationHandler {
             var itemResult: Any?
             var shouldBreakDispatch: Boolean
 
-            val connectionItem = connection.getItem(_streamClass)!!
+            val connectionItem = connection.getItem(_streamClass)
             synchronized(connectionItem) {
                 connectionItem.resetBreakDispatch()
 
