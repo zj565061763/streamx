@@ -33,7 +33,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         }
 
 
-        val uuid = if (FStreamManager.isDebug) UUID.randomUUID().toString() else null
+        val uuid = if (FStreamManager.isDebug) UUID.randomUUID().toString() else ""
         val isVoid = returnType == Void.TYPE || returnType == Void::class.java
         var result = processMainLogic(isVoid, method, args, uuid)
 
