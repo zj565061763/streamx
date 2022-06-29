@@ -216,17 +216,11 @@ class ExampleInstrumentedTest {
             this.register(stream3)
         }
 
-        val proxy = FStream.ProxyBuilder()
-            .setDispatchCallback(object : FStream.DispatchCallback {
-                override fun beforeDispatch(stream: FStream, method: Method, methodParams: Array<Any?>?): Boolean {
-                    return true
-                }
-
-                override fun afterDispatch(stream: FStream, method: Method, methodParams: Array<Any?>?, methodResult: Any?): Boolean {
-                    return false
-                }
-            })
-            .build(TestStream::class.java)
+        val proxy = TestStream::class.buildProxy {
+            setBeforeDispatchCallback { _, _, _ ->
+                true
+            }
+        }
 
         val result = proxy.getContent("http")
         Assert.assertEquals(null, result)
@@ -279,24 +273,18 @@ class ExampleInstrumentedTest {
             this.register(stream3)
         }
 
-        val listResult = mutableListOf<Any?>()
-        val proxy = FStream.ProxyBuilder()
-            .setResultFilter(object : FStream.ResultFilter {
-                override fun filter(method: Method, methodParams: Array<Any?>?, results: List<Any?>): Any? {
-                    listResult.addAll(results)
-                    return results.last()
-                }
-            })
-            .setDispatchCallback(object : FStream.DispatchCallback {
-                override fun beforeDispatch(stream: FStream, method: Method, methodParams: Array<Any?>?): Boolean {
-                    return false
-                }
 
-                override fun afterDispatch(stream: FStream, method: Method, methodParams: Array<Any?>?, methodResult: Any?): Boolean {
-                    return "2" == methodResult
-                }
-            })
-            .build(TestStream::class.java)
+        val listResult = mutableListOf<Any?>()
+        val proxy = TestStream::class.buildProxy {
+            setResultFilter { _, _, results ->
+                listResult.addAll(results)
+                results.last()
+            }
+            setAfterDispatchCallback() { _, _, _, methodResult ->
+                "2" == methodResult
+            }
+        }
+
 
         val result = proxy.getContent("http")
         Assert.assertEquals("2", result)

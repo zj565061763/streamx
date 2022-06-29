@@ -24,7 +24,10 @@ interface FStream {
         internal var tag: Any? = null
             private set
 
-        internal var dispatchCallback: DispatchCallback? = null
+        internal var beforeDispatchCallback: BeforeDispatchCallback? = null
+            private set
+
+        internal var afterDispatchCallback: AfterDispatchCallback? = null
             private set
 
         internal var resultFilter: ResultFilter? = null
@@ -39,10 +42,18 @@ interface FStream {
         }
 
         /**
-         * 设置流对象方法分发回调
+         * 设置流对象方法被通知之前回调
          */
-        fun setDispatchCallback(callback: DispatchCallback?): ProxyBuilder {
-            this.dispatchCallback = callback
+        fun setBeforeDispatchCallback(callback: BeforeDispatchCallback?): ProxyBuilder {
+            this.beforeDispatchCallback = callback
+            return this
+        }
+
+        /**
+         * 设置流对象方法被通知之后回调
+         */
+        fun setAfterDispatchCallback(callback: AfterDispatchCallback?): ProxyBuilder {
+            this.afterDispatchCallback = callback
             return this
         }
 
@@ -69,19 +80,21 @@ interface FStream {
         }
     }
 
-    interface DispatchCallback {
+    fun interface BeforeDispatchCallback {
         /**
-         * 流对象的方法被通知之前触发
+         * 流对象方法被通知之前触发
          *
          * @param stream       流对象
          * @param method       方法
          * @param methodParams 方法参数
          * @return true-停止分发，false-继续分发
          */
-        fun beforeDispatch(stream: FStream, method: Method, methodParams: Array<Any?>?): Boolean
+        fun dispatch(stream: FStream, method: Method, methodParams: Array<Any?>?): Boolean
+    }
 
+    fun interface AfterDispatchCallback {
         /**
-         * 流对象的方法被通知之后触发
+         * 流对象方法被通知之后触发
          *
          * @param stream       流对象
          * @param method       方法
@@ -89,7 +102,7 @@ interface FStream {
          * @param methodResult 流对象方法被调用后的返回值
          * @return true-停止分发，false-继续分发
          */
-        fun afterDispatch(stream: FStream, method: Method, methodParams: Array<Any?>?, methodResult: Any?): Boolean
+        fun dispatch(stream: FStream, method: Method, methodParams: Array<Any?>?, methodResult: Any?): Boolean
     }
 
     fun interface ResultFilter {

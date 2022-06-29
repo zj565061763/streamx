@@ -10,13 +10,15 @@ internal class ProxyInvocationHandler : InvocationHandler {
     private val _streamClass: Class<out FStream>
 
     private val _tag: Any?
-    private val _dispatchCallback: DispatchCallback?
+    private val _beforeDispatchCallback: BeforeDispatchCallback?
+    private val _afterDispatchCallback: AfterDispatchCallback?
     private val _resultFilter: ResultFilter?
 
     constructor(builder: ProxyBuilder) {
         _streamClass = builder.streamClass!!
         _tag = builder.tag
-        _dispatchCallback = builder.dispatchCallback
+        _beforeDispatchCallback = builder.beforeDispatchCallback
+        _afterDispatchCallback = builder.afterDispatchCallback
         _resultFilter = builder.resultFilter
     }
 
@@ -113,9 +115,9 @@ internal class ProxyInvocationHandler : InvocationHandler {
                 continue
             }
 
-            if (_dispatchCallback != null && _dispatchCallback.beforeDispatch(item, method, args)) {
+            if (_beforeDispatchCallback?.dispatch(item, method, args) == true) {
                 if (FStreamManager.isDebug) {
-                    Log.i(FStream::class.java.simpleName, "proxy broken dispatch before uuid:${uuid}")
+                    Log.i(FStream::class.java.simpleName, "dispatch broken before uuid:${uuid}")
                 }
                 break
             }
@@ -154,9 +156,9 @@ internal class ProxyInvocationHandler : InvocationHandler {
                 listResult!!.add(itemResult)
             }
 
-            if (_dispatchCallback != null && _dispatchCallback.afterDispatch(item, method, args, itemResult)) {
+            if (_afterDispatchCallback?.dispatch(item, method, args, itemResult) == true) {
                 if (FStreamManager.isDebug) {
-                    Log.i(FStream::class.java.simpleName, "proxy broken dispatch after uuid:${uuid}")
+                    Log.i(FStream::class.java.simpleName, "dispatch broken after uuid:${uuid}")
                 }
                 break
             }
