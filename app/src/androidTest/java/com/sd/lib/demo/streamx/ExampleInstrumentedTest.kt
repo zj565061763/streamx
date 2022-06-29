@@ -95,6 +95,16 @@ class ExampleInstrumentedTest {
         stream1.unregisterStream()
     }
 
+    @Test
+    fun testDefaultStream() {
+        DefaultStreamManager.register(TestDefaultStream::class.java)
+
+        val proxy = TestStream::class.buildProxy()
+        Assert.assertEquals("default@http", proxy.getContent("http"))
+
+        DefaultStreamManager.unregister(TestDefaultStream::class.java)
+        Assert.assertEquals(null, proxy.getContent("http"))
+    }
 
     @Test
     fun testNormal() {
@@ -213,18 +223,6 @@ class ExampleInstrumentedTest {
         Assert.assertEquals(null, FStreamManager.getConnection(stream4))
     }
 
-    @Test
-    fun testDefaultStream() {
-        DefaultStreamManager.register(TestDefaultStream::class.java)
-
-        val proxy = FStream.ProxyBuilder().build(TestStream::class.java)
-        val result = proxy.getContent("http")
-        Assert.assertEquals("default@http", result)
-
-        DefaultStreamManager.unregister(TestDefaultStream::class.java)
-
-        Assert.assertEquals(null, proxy.getContent("http"))
-    }
 
     @Test
     fun testDispatchCallbackBefore() {
