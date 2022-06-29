@@ -227,7 +227,7 @@ class ExampleInstrumentedTest {
     }
 
     @Test
-    fun testDispatchCallbackAfter() {
+    fun testAfterDispatchCallback() {
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -238,7 +238,6 @@ class ExampleInstrumentedTest {
                 return null
             }
         }
-
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -249,7 +248,6 @@ class ExampleInstrumentedTest {
                 return null
             }
         }
-
         val stream3 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -261,11 +259,9 @@ class ExampleInstrumentedTest {
             }
         }
 
-        FStreamManager.run {
-            this.register(stream1)
-            this.register(stream2)
-            this.register(stream3)
-        }
+        stream1.registerStream()
+        stream2.registerStream()
+        stream3.registerStream()
 
 
         val listResult = mutableListOf<Any?>()
@@ -286,11 +282,9 @@ class ExampleInstrumentedTest {
         Assert.assertEquals("1", listResult[0])
         Assert.assertEquals("2", listResult[1])
 
-        FStreamManager.run {
-            this.unregister(stream1)
-            this.unregister(stream2)
-            this.unregister(stream3)
-        }
+        stream1.unregisterStream()
+        stream2.unregisterStream()
+        stream3.unregisterStream()
     }
 
     @Test
