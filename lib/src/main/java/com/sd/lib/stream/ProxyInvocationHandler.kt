@@ -21,11 +21,6 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         _resultFilter = builder.resultFilter
     }
 
-    private fun checkTag(stream: FStream): Boolean {
-        val tag = stream.getTagForStream(_streamClass)
-        return _tag == tag
-    }
-
     override fun invoke(proxy: Any, method: Method, args: Array<Any?>?): Any? {
         val returnType = method.returnType
         val parameterTypes = method.parameterTypes
@@ -110,7 +105,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 continue
             }
 
-            if (!checkTag(item)) {
+            if (item.getTagForStream(_streamClass) != _tag) {
                 continue
             }
 
