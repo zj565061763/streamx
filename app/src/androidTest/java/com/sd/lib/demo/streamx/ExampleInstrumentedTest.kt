@@ -176,7 +176,7 @@ class ExampleInstrumentedTest {
     }
 
     @Test
-    fun testDispatchCallbackBefore() {
+    fun testBeforeDispatchCallback() {
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -187,7 +187,6 @@ class ExampleInstrumentedTest {
                 return null
             }
         }
-
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -198,7 +197,6 @@ class ExampleInstrumentedTest {
                 return null
             }
         }
-
         val stream3 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -210,11 +208,9 @@ class ExampleInstrumentedTest {
             }
         }
 
-        FStreamManager.run {
-            this.register(stream1)
-            this.register(stream2)
-            this.register(stream3)
-        }
+        stream1.registerStream()
+        stream2.registerStream()
+        stream3.registerStream()
 
         val proxy = TestStream::class.buildProxy {
             setBeforeDispatchCallback { _, _, _ ->
@@ -225,11 +221,9 @@ class ExampleInstrumentedTest {
         val result = proxy.getContent("http")
         Assert.assertEquals(null, result)
 
-        FStreamManager.run {
-            this.unregister(stream1)
-            this.unregister(stream2)
-            this.unregister(stream3)
-        }
+        stream1.unregisterStream()
+        stream2.unregisterStream()
+        stream3.unregisterStream()
     }
 
     @Test
