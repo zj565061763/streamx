@@ -143,6 +143,12 @@ class ExampleInstrumentedTest {
         Assert.assertEquals(1, FStreamManager.getConnection(stream1)!!.getPriority())
         Assert.assertEquals(0, FStreamManager.getConnection(stream2)!!.getPriority())
 
+        val builder = StringBuilder()
+        val proxy = TestBuildStream::class.buildProxy()
+
+        proxy.build(builder)
+        Assert.assertEquals("120", builder.toString())
+
         stream0.unregisterStream()
         stream1.unregisterStream()
         stream2.unregisterStream()
