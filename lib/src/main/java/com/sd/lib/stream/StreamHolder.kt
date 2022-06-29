@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * 流对象持有者，保存流接口映射的流对象列表
  */
-internal class StreamHolder {
+internal class StreamHolder(clazz: Class<out FStream>) {
     /** 流接口 */
-    private val _class: Class<out FStream>
+    private val _class: Class<out FStream> = clazz
 
     /** 流对象 */
     private val _streamHolder: MutableSet<FStream> = LinkedHashSet()
@@ -22,10 +22,6 @@ internal class StreamHolder {
 
     /** 流对象数量 */
     val size get() = _streamHolder.size
-
-    constructor(clazz: Class<out FStream>) {
-        _class = clazz
-    }
 
     /**
      * 添加流对象
