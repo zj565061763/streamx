@@ -6,16 +6,15 @@ import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.util.*
 
-internal class ProxyInvocationHandler : InvocationHandler {
+internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler {
     private val _streamClass: Class<out FStream>
-
     private val _tag: Any?
     private val _beforeDispatchCallback: BeforeDispatchCallback?
     private val _afterDispatchCallback: AfterDispatchCallback?
     private val _resultFilter: ResultFilter?
 
-    constructor(builder: ProxyBuilder) {
-        _streamClass = builder.streamClass!!
+    init {
+        _streamClass = requireNotNull(builder.streamClass)
         _tag = builder.tag
         _beforeDispatchCallback = builder.beforeDispatchCallback
         _afterDispatchCallback = builder.afterDispatchCallback
