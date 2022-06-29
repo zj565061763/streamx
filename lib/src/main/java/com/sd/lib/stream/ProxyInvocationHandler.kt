@@ -119,19 +119,20 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             var itemResult: Any?
             var shouldBreakDispatch: Boolean
 
-            val connectionItem = connection.getItem(_streamClass)
-            synchronized(connectionItem) {
-                connectionItem.resetBreakDispatch()
+            connection.getItem(_streamClass).let { connectionItem ->
+                synchronized(connectionItem) {
+                    connectionItem.resetBreakDispatch()
 
-                // 调用流对象方法
-                itemResult = if (args != null) {
-                    method.invoke(item, *args)
-                } else {
-                    method.invoke(item)
+                    // 调用流对象方法
+                    itemResult = if (args != null) {
+                        method.invoke(item, *args)
+                    } else {
+                        method.invoke(item)
+                    }
+
+                    shouldBreakDispatch = connectionItem.shouldBreakDispatch
+                    connectionItem.resetBreakDispatch()
                 }
-
-                shouldBreakDispatch = connectionItem.shouldBreakDispatch
-                connectionItem.resetBreakDispatch()
             }
 
             if (FStreamManager.isDebug) {
