@@ -75,7 +75,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             )
         }
 
-        if (listStream == null || listStream.isEmpty()) {
+        if (listStream.isNullOrEmpty()) {
             // 尝试创建默认流对象
             val defaultStream = DefaultStreamManager.getStream(_streamClass) ?: return null
             val result = if (args != null) {
