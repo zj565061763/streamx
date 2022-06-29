@@ -72,8 +72,8 @@ class StreamConnection internal constructor(
     }
 }
 
-internal abstract class ConnectionItem {
-    private val _class: Class<out FStream>
+internal abstract class ConnectionItem(clazz: Class<out FStream>) {
+    private val _class = clazz
 
     /** 优先级  */
     @Volatile
@@ -85,25 +85,21 @@ internal abstract class ConnectionItem {
     var shouldBreakDispatch = false
         private set
 
-    constructor(clazz: Class<out FStream>) {
-        _class = clazz
-    }
-
     /**
      * 设置优先级
      */
     fun setPriority(priority: Int) {
-        val isChanged: Boolean = synchronized(this@ConnectionItem) {
+        synchronized(this@ConnectionItem) {
             if (this.priority != priority) {
                 this.priority = priority
                 true
             } else {
                 false
             }
-        }
-
-        if (isChanged) {
-            onPriorityChanged(priority, _class)
+        }.let { changed ->
+            if (changed) {
+                onPriorityChanged(priority, _class)
+            }
         }
     }
 
@@ -111,9 +107,7 @@ internal abstract class ConnectionItem {
      * 设置停止分发
      */
     fun breakDispatch() {
-        synchronized(this@ConnectionItem) {
-            shouldBreakDispatch = true
-        }
+        shouldBreakDispatch = true
     }
 
     /**
