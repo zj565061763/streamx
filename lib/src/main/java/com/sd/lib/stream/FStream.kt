@@ -30,9 +30,6 @@ interface FStream {
         internal var resultFilter: ResultFilter? = null
             private set
 
-        internal var isSticky = false
-            private set
-
         /**
          * 设置代理对象的tag
          */
@@ -54,14 +51,6 @@ interface FStream {
          */
         fun setResultFilter(filter: ResultFilter?): ProxyBuilder {
             this.resultFilter = filter
-            return this
-        }
-
-        /**
-         * 设置是否支持粘性触发
-         */
-        fun setSticky(sticky: Boolean): ProxyBuilder {
-            this.isSticky = sticky
             return this
         }
 

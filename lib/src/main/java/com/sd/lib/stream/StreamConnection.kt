@@ -29,15 +29,6 @@ class StreamConnection {
         get() = _mapItem.keys
 
     /**
-     * 粘性触发方法
-     */
-    fun stickyInvoke() {
-        for (clazz in _mapItem.keys) {
-            StickyInvokeManager.stickyInvoke(_stream, clazz)
-        }
-    }
-
-    /**
      * 返回优先级
      */
     fun getPriority(clazz: Class<out FStream>): Int {

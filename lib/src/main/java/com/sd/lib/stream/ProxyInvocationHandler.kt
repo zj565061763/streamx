@@ -12,18 +12,12 @@ internal class ProxyInvocationHandler : InvocationHandler {
     private val _tag: Any?
     private val _dispatchCallback: DispatchCallback?
     private val _resultFilter: ResultFilter?
-    private val _isSticky: Boolean
 
     constructor(builder: ProxyBuilder) {
         _streamClass = builder.streamClass!!
         _tag = builder.tag
         _dispatchCallback = builder.dispatchCallback
         _resultFilter = builder.resultFilter
-        _isSticky = builder.isSticky
-
-        if (_isSticky) {
-            StickyInvokeManager.proxyCreated(_streamClass)
-        }
     }
 
     private fun checkTag(stream: FStream): Boolean {
@@ -67,10 +61,6 @@ internal class ProxyInvocationHandler : InvocationHandler {
 
         if (FStreamManager.isDebug) {
             Log.i(FStream::class.java.simpleName, "notify finish return:${result} uuid:${uuid}")
-        }
-
-        if (_isSticky) {
-            StickyInvokeManager.proxyInvoke(_streamClass, _tag, method, args)
         }
         return result
     }
@@ -185,11 +175,5 @@ internal class ProxyInvocationHandler : InvocationHandler {
             }
         }
         return result
-    }
-
-    protected fun finalize() {
-        if (_isSticky) {
-            StickyInvokeManager.proxyDestroyed(_streamClass)
-        }
     }
 }
