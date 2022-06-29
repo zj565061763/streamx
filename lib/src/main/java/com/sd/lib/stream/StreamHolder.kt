@@ -26,7 +26,6 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     /**
      * 添加流对象
      */
-    @Synchronized
     fun add(stream: FStream): Boolean {
         return _streamHolder.add(stream).also { result ->
             if (result) {
@@ -41,7 +40,6 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     /**
      * 移除流对象
      */
-    @Synchronized
     fun remove(stream: FStream): Boolean {
         return _streamHolder.remove(stream).also {
             _priorityStreamHolder.remove(stream)
@@ -51,7 +49,6 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     /**
      * 返回流集合
      */
-    @Synchronized
     fun toCollection(): Collection<FStream> {
         sort()
         return _streamHolder
@@ -82,23 +79,23 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     /**
      * 通知优先级变化
      */
-    @Synchronized
     fun notifyPriorityChanged(priority: Int, stream: FStream, clazz: Class<out FStream>) {
-        if (!_streamHolder.contains(stream)) return
+        synchronized(FStreamManager) {
+            if (!_streamHolder.contains(stream)) return
 
-        if (priority == 0) {
-            _priorityStreamHolder.remove(stream)
-        } else {
-            _priorityStreamHolder[stream] = priority
-        }
+            if (priority == 0) {
+                _priorityStreamHolder.remove(stream)
+            } else {
+                _priorityStreamHolder[stream] = priority
+            }
 
-        _isNeedSort = _priorityStreamHolder.isNotEmpty()
-
-        if (FStreamManager.isDebug) {
-            Log.i(
-                FStream::class.java.simpleName,
-                "notifyPriorityChanged priority:${priority} clazz:${clazz.name} priorityStreamHolder size:${_priorityStreamHolder.size} stream:${stream}"
-            )
+            _isNeedSort = _priorityStreamHolder.isNotEmpty()
+            if (FStreamManager.isDebug) {
+                Log.i(
+                    FStream::class.java.simpleName,
+                    "notifyPriorityChanged priority:${priority} clazz:${clazz.name} priorityStreamHolder size:${_priorityStreamHolder.size} stream:${stream}"
+                )
+            }
         }
     }
 
