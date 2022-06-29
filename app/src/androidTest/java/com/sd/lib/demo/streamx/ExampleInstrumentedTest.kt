@@ -65,6 +65,38 @@ class ExampleInstrumentedTest {
     }
 
     @Test
+    fun testUnregisterWhenDispatch() {
+        val proxy = TestStream::class.buildProxy()
+        val stream0 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                unregisterStream()
+                return "0"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+        val stream1 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "1"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+
+        stream0.registerStream()
+        stream1.registerStream()
+
+        proxy.getContent("http")
+        stream1.unregisterStream()
+    }
+
+    @Test
     fun testStreamTag() {
         val stream0 = object : TestBuildStream {
             override fun build(builder: StringBuilder) {
