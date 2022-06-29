@@ -2,25 +2,12 @@ package com.sd.lib.stream
 
 import java.util.*
 
-class StreamConnection {
-    private val _stream: FStream
+class StreamConnection internal constructor(
+    stream: FStream,
+    classes: Collection<Class<out FStream>>,
+) {
+    private val _stream = stream
     private val _mapItem: Map<Class<out FStream>, ConnectionItem>
-
-    internal constructor(stream: FStream, classes: Collection<Class<out FStream>>) {
-        _stream = stream
-
-        val map = HashMap<Class<out FStream>, ConnectionItem>()
-        for (item in classes) {
-            checkStreamClass(item)
-            map[item] = object : ConnectionItem(item) {
-                override fun onPriorityChanged(priority: Int, clazz: Class<out FStream>) {
-                    val holder = FStreamManager.getStreamHolder(clazz)
-                    holder?.notifyPriorityChanged(priority, stream, clazz)
-                }
-            }
-        }
-        _mapItem = Collections.unmodifiableMap(map)
-    }
 
     /**
      * 当前连接的所有流接口
@@ -73,6 +60,20 @@ class StreamConnection {
 
     private fun checkStreamClass(clazz: Class<out FStream>) {
         require(clazz.isInterface) { "class must be an interface class:${clazz.name}" }
+    }
+
+    init {
+        val map = HashMap<Class<out FStream>, ConnectionItem>()
+        for (item in classes) {
+            checkStreamClass(item)
+            map[item] = object : ConnectionItem(item) {
+                override fun onPriorityChanged(priority: Int, clazz: Class<out FStream>) {
+                    val holder = FStreamManager.getStreamHolder(clazz)
+                    holder?.notifyPriorityChanged(priority, stream, clazz)
+                }
+            }
+        }
+        _mapItem = Collections.unmodifiableMap(map)
     }
 }
 
