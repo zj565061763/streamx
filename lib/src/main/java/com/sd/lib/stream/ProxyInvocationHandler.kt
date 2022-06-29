@@ -119,9 +119,9 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             var itemResult: Any?
             var shouldBreakDispatch: Boolean
 
-            connection.getItem(_streamClass).let { connectionItem ->
-                synchronized(connectionItem) {
-                    connectionItem.resetBreakDispatch()
+            connection.getItem(_streamClass).let { item ->
+                synchronized(item) {
+                    item.resetBreakDispatch()
 
                     // 调用流对象方法
                     itemResult = if (args != null) {
@@ -130,8 +130,8 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                         method.invoke(stream)
                     }
 
-                    shouldBreakDispatch = connectionItem.shouldBreakDispatch
-                    connectionItem.resetBreakDispatch()
+                    shouldBreakDispatch = item.shouldBreakDispatch
+                    item.resetBreakDispatch()
                 }
             }
 
