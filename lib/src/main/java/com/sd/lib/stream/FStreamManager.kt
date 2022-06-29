@@ -125,19 +125,17 @@ object FStreamManager {
         }
 
         val binder = factory()
-        if (!binder.bind()) {
-            // 绑定失败
-            return false
+        return binder.bind().also { success ->
+            if (success) {
+                _mapStreamBinder[stream] = binder
+                if (isDebug) {
+                    Log.i(
+                        FStream::class.java.simpleName,
+                        "bind stream:${stream} target:${target} size:${_mapStreamBinder.size}"
+                    )
+                }
+            }
         }
-
-        _mapStreamBinder[stream] = binder
-        if (isDebug) {
-            Log.i(
-                FStream::class.java.simpleName,
-                "bind stream:${stream} target:${target} size:${_mapStreamBinder.size}"
-            )
-        }
-        return true
     }
 
     /**
