@@ -61,15 +61,17 @@ internal class StreamHolder(clazz: Class<out FStream>) {
         if (!_isNeedSort) return
         if (_streamHolder.size <= 1) return
 
-        // 转数组排序
-        val array = _streamHolder.toTypedArray().also {
-            it.sortWith(StreamPriorityComparatorDesc())
-        }
+        synchronized(FStreamManager) {
+            // 排序
+            val array = _streamHolder.toTypedArray().also {
+                it.sortWith(StreamPriorityComparatorDesc())
+            }
 
-        // 把排序后的数组保存到容器
-        _streamHolder.clear()
-        _streamHolder.addAll(array)
-        _isNeedSort = false
+            // 把排序后的数组保存到容器
+            _streamHolder.clear()
+            _streamHolder.addAll(array)
+            _isNeedSort = false
+        }
 
         if (FStreamManager.isDebug) {
             Log.i(FStream::class.java.simpleName, "sort stream for class:${_class.name}")
