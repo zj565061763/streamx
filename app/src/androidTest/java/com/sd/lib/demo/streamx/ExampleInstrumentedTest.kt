@@ -177,6 +177,16 @@ class ExampleInstrumentedTest {
 
     @Test
     fun testBeforeDispatchCallback() {
+        val stream0 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "0"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -197,20 +207,10 @@ class ExampleInstrumentedTest {
                 return null
             }
         }
-        val stream3 = object : TestStream {
-            override fun getContent(url: String): String {
-                Assert.assertEquals("http", url)
-                return "3"
-            }
 
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
-        }
-
+        stream0.registerStream()
         stream1.registerStream()
         stream2.registerStream()
-        stream3.registerStream()
 
         val proxy = TestStream::class.buildProxy {
             setBeforeDispatchCallback { _, _, _ ->
@@ -221,13 +221,66 @@ class ExampleInstrumentedTest {
         val result = proxy.getContent("http")
         Assert.assertEquals(null, result)
 
+        stream0.unregisterStream()
         stream1.unregisterStream()
         stream2.unregisterStream()
-        stream3.unregisterStream()
     }
 
     @Test
     fun testAfterDispatchCallback() {
+        val stream0 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "0"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+        val stream1 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "1"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+        val stream2 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "2"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
+
+        stream0.registerStream()
+        stream1.registerStream()
+        stream2.registerStream()
+
+
+        val proxy = TestStream::class.buildProxy {
+            setAfterDispatchCallback { _, _, _, methodResult ->
+                "1" == methodResult
+            }
+        }
+
+
+        val result = proxy.getContent("http")
+        Assert.assertEquals("1", result)
+
+        stream0.unregisterStream()
+        stream1.unregisterStream()
+        stream2.unregisterStream()
+    }
+
+    @Test
+    fun testResultFilter() {
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
@@ -263,24 +316,18 @@ class ExampleInstrumentedTest {
         stream2.registerStream()
         stream3.registerStream()
 
-
-        val listResult = mutableListOf<Any?>()
         val proxy = TestStream::class.buildProxy {
             setResultFilter { _, _, results ->
-                listResult.addAll(results)
-                results.last()
-            }
-            setAfterDispatchCallback() { _, _, _, methodResult ->
-                "2" == methodResult
+                Assert.assertEquals(3, results.size)
+                Assert.assertEquals("1", results[0])
+                Assert.assertEquals("2", results[1])
+                Assert.assertEquals("3", results[2])
+                results[1]
             }
         }
 
-
         val result = proxy.getContent("http")
-        Assert.assertEquals("2", result)
-        Assert.assertEquals(2, listResult.size)
-        Assert.assertEquals("1", listResult[0])
-        Assert.assertEquals("2", listResult[1])
+        Assert.assertEquals("1", result)
 
         stream1.unregisterStream()
         stream2.unregisterStream()
