@@ -3,9 +3,7 @@ package com.sd.lib.demo.streamx
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sd.lib.demo.streamx.utils.TestDefaultStream
 import com.sd.lib.demo.streamx.utils.TestStream
-import com.sd.lib.stream.DefaultStreamManager
-import com.sd.lib.stream.FStream
-import com.sd.lib.stream.FStreamManager
+import com.sd.lib.stream.*
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -66,29 +64,27 @@ class ExampleInstrumentedTest {
             }
         }
 
-        FStreamManager.run {
-            this.register(stream0)
-            this.register(stream1).setPriority(-1)
-            this.register(stream2)
-            this.register(stream3).setPriority(1)
-        }
+        stream0.registerStream()
+        stream1.registerStream().setPriority(-1)
+        stream2.registerStream()
+        stream3.registerStream().setPriority(1)
 
         Assert.assertEquals(0, FStreamManager.getConnection(stream0)!!.getPriority(TestStream::class.java))
         Assert.assertEquals(-1, FStreamManager.getConnection(stream1)!!.getPriority(TestStream::class.java))
         Assert.assertEquals(0, FStreamManager.getConnection(stream2)!!.getPriority(TestStream::class.java))
         Assert.assertEquals(1, FStreamManager.getConnection(stream3)!!.getPriority(TestStream::class.java))
 
-        val listResult = mutableListOf<Any?>()
-        val proxy = FStream.ProxyBuilder()
-            .setResultFilter(object : FStream.ResultFilter {
-                override fun filter(method: Method, methodParams: Array<Any?>?, results: List<Any?>): Any? {
-                    listResult.addAll(results)
-                    return results.last()
-                }
-            })
-            .build(TestStream::class.java)
 
-        listResult.clear()
+        val listResult = mutableListOf<Any?>()
+        val proxy = TestStream::class.buildProxy {
+            setResultFilter { _, _, results ->
+                listResult.clear()
+                listResult.addAll(results)
+                results.last()
+            }
+        }
+
+
         Assert.assertEquals("1", proxy.getContent("http"))
         Assert.assertEquals(3, listResult.size)
         Assert.assertEquals("3", listResult[0])
