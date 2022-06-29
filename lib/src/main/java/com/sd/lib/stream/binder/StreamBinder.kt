@@ -4,14 +4,17 @@ import com.sd.lib.stream.FStream
 import com.sd.lib.stream.FStreamManager
 import java.lang.ref.WeakReference
 
-internal abstract class StreamBinder<T> {
+internal abstract class StreamBinder<T>(
+    stream: FStream,
+    target: T,
+) {
     private val _stream: WeakReference<FStream>
     private val _target: WeakReference<T>
 
     /** 返回要绑定的对象 */
     val target: T? get() = _target.get()
 
-    constructor(stream: FStream, target: T) {
+    init {
         _stream = WeakReference(stream)
         _target = WeakReference(target)
     }
