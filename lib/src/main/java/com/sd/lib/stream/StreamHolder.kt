@@ -1,6 +1,7 @@
 package com.sd.lib.stream
 
 import android.util.Log
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * 流对象持有者，保存流接口映射的流对象列表
@@ -10,7 +11,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private val _class: Class<out FStream> = clazz
 
     /** 流对象 */
-    private val _streamHolder: MutableCollection<FStream> = ArrayList()
+    private val _streamHolder: MutableCollection<FStream> = CopyOnWriteArrayList()
 
     /** 设置了优先级的流对象  */
     private val _priorityStreamHolder: MutableMap<FStream, Int> = HashMap()
