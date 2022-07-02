@@ -23,7 +23,7 @@ class StreamConnection internal constructor(
         return if (clazz != null) {
             _mapItem[clazz]!!.priority
         } else {
-            check(_mapItem.size == 1)
+            check(_mapItem.size == 1) { "You should specified target class" }
             _mapItem.values.first().priority
         }
     }
@@ -50,7 +50,7 @@ class StreamConnection internal constructor(
         if (clazz != null) {
             _mapItem[clazz]!!.breakDispatch()
         } else {
-            check(_mapItem.size == 1)
+            check(_mapItem.size == 1) { "You should specified target class" }
             _mapItem.values.first().breakDispatch()
         }
     }
