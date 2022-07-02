@@ -88,12 +88,24 @@ class ExampleInstrumentedTest {
                 return null
             }
         }
+        val stream2 = object : TestStream {
+            override fun getContent(url: String): String {
+                Assert.assertEquals("http", url)
+                return "2"
+            }
+
+            override fun getTagForStream(clazz: Class<out FStream>): Any? {
+                return null
+            }
+        }
 
         stream0.registerStream()
         stream1.registerStream()
+        stream2.registerStream()
 
         proxy.getContent("http")
         stream1.unregisterStream()
+        stream2.unregisterStream()
     }
 
     @Test
