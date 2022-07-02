@@ -5,7 +5,6 @@ import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.Window
 import com.sd.lib.stream.FStream
-import java.lang.ref.WeakReference
 
 /**
  * 将流对象和[Activity]绑定，在[Window.getDecorView]被移除的时候取消注册
@@ -14,20 +13,6 @@ internal class ActivityStreamBinder(
     stream: FStream,
     target: Activity,
 ) : StreamBinder<Activity>(stream, target) {
-
-    private val _decorViewRef: WeakReference<View>
-
-    override fun bind(): Boolean {
-        val activity = target ?: return false
-        if (activity.isFinishing) return false
-        val decorView = _decorViewRef.get() ?: return false
-        return registerStream().also {
-            if (it) {
-                decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
-                decorView.addOnAttachStateChangeListener(_onAttachStateChangeListener)
-            }
-        }
-    }
 
     private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
         override fun onViewAttachedToWindow(v: View) {
@@ -38,13 +23,22 @@ internal class ActivityStreamBinder(
         }
     }
 
-    override fun destroy() {
-        super.destroy()
-        _decorViewRef.get()?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+    override fun bindImpl(target: Activity): Boolean {
+        if (target.isFinishing) return false
+
+        val decorView = requireNotNull(target.window) {
+            "Bind stream failed because activity's window is null."
+        }.decorView
+
+        return registerStream().also {
+            if (it) {
+                decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+                decorView.addOnAttachStateChangeListener(_onAttachStateChangeListener)
+            }
+        }
     }
 
-    init {
-        val window = requireNotNull(target.window) { "Bind stream failed because activity's window is null" }
-        _decorViewRef = WeakReference(window.decorView)
+    override fun onDestroy(target: Activity) {
+        target.window?.decorView?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
     }
 }

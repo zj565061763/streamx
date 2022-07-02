@@ -13,9 +13,17 @@ internal class ViewStreamBinder(
     target: View,
 ) : StreamBinder<View>(stream, target) {
 
-    override fun bind(): Boolean {
-        val target = target ?: return false
+    private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
+        override fun onViewAttachedToWindow(v: View) {
+            registerStream()
+        }
 
+        override fun onViewDetachedFromWindow(v: View) {
+            unregisterStream()
+        }
+    }
+
+    override fun bindImpl(target: View): Boolean {
         val context = target.context
         if (context is Activity && context.isFinishing) {
             return false
@@ -34,18 +42,7 @@ internal class ViewStreamBinder(
         }
     }
 
-    private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
-        override fun onViewAttachedToWindow(v: View) {
-            registerStream()
-        }
-
-        override fun onViewDetachedFromWindow(v: View) {
-            unregisterStream()
-        }
-    }
-
-    override fun destroy() {
-        super.destroy()
-        target?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+    override fun onDestroy(target: View) {
+        target.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
     }
 }
