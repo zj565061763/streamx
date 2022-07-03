@@ -11,36 +11,23 @@ import java.lang.ref.WeakReference
  * 用弱引用缓存流对象的工厂
  */
 class WeakCacheStreamFactory : CacheableStreamFactory() {
-    private val _referenceQueue = ReferenceQueue<FStream>()
-
-    private val _mapStream: MutableMap<Class<out FStream>, WeakReference<FStream>> = HashMap()
-    private val _mapReference: MutableMap<WeakReference<FStream>, Class<out FStream>> = HashMap()
+    private val _refQueue = ReferenceQueue<FStream>()
+    private val _streamHolder: MutableMap<Class<out FStream>, StreamRef<FStream>> = HashMap()
 
     override fun getCache(param: CreateParam): FStream? {
-        return _mapStream[param.classStream]?.get()
+        return _streamHolder[param.classStream]?.get()
     }
 
     override fun setCache(param: CreateParam, stream: FStream) {
         releaseReference()
 
-        val reference = WeakReference(stream, _referenceQueue)
-        val oldReference = _mapStream.put(param.classStream, reference)
-        if (oldReference != null) {
-            // 移除旧的引用
-            _mapReference.remove(oldReference)
-            if (FStreamManager.isDebug) {
-                Log.i(
-                    WeakCacheStreamFactory::class.java.simpleName,
-                    "remove old reference:${oldReference} ${_sizeLog}"
-                )
-            }
-        }
+        val ref = StreamRef(param.classStream, stream, _refQueue)
+        _streamHolder[param.classStream] = ref
 
-        _mapReference[reference] = param.classStream
         if (FStreamManager.isDebug) {
             Log.i(
                 WeakCacheStreamFactory::class.java.simpleName,
-                "+++++ setCache for class:${param.classStream.name} stream:${stream} reference:${reference} ${_sizeLog}"
+                "+++++ class:${param.classStream.name} stream:${stream} size:${_streamHolder.size}"
             )
         }
     }
@@ -48,30 +35,12 @@ class WeakCacheStreamFactory : CacheableStreamFactory() {
     private fun releaseReference() {
         var count = 0
         while (true) {
-            val reference = _referenceQueue.poll() ?: break
-
-            val clazz = _mapReference.remove(reference)
-            if (clazz == null) {
-                // 如果为null，说明这个引用已经被手动从map中移除
-                if (FStreamManager.isDebug) {
-                    Log.i(
-                        WeakCacheStreamFactory::class.java.simpleName,
-                        "releaseReference ghost reference was found:${reference}"
-                    )
-                }
-                continue
-            }
-
-            val streamReference = _mapStream.remove(clazz)
-            if (streamReference === reference) {
+            val reference = _refQueue.poll()
+            if (reference is StreamRef) {
+                _streamHolder.remove(reference.clazz)
                 count++
             } else {
-                if (FStreamManager.isDebug) {
-                    Log.e(
-                        WeakCacheStreamFactory::class.java.simpleName,
-                        "releaseReference class:${clazz.name} reference:${reference} streamReference:${streamReference}"
-                    )
-                }
+                break
             }
         }
 
@@ -79,14 +48,15 @@ class WeakCacheStreamFactory : CacheableStreamFactory() {
             if (FStreamManager.isDebug) {
                 Log.i(
                     WeakCacheStreamFactory::class.java.simpleName,
-                    "releaseReference count:${count} ${_sizeLog}"
+                    "releaseReference count:${count} size:${_streamHolder.size}"
                 )
             }
         }
     }
-
-    private val _sizeLog: String
-        get() = """
-            size:${_mapStream.size},${_mapReference.size}
-        """.trimIndent()
 }
+
+private class StreamRef<T>(
+    val clazz: Class<*>,
+    referent: T,
+    q: ReferenceQueue<in T>,
+) : WeakReference<T>(referent, q)
