@@ -67,7 +67,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
             }
             _isNeedSort = false
         }
-        logMsg { "sort stream for class:${_class.name}" }
+        logMsg { "sort ${_class.name}" }
     }
 
     /**
