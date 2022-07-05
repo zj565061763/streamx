@@ -49,7 +49,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             logMsg { "return type:${returnType} but method result is null, so set to $result uuid:${uuid}" }
         }
 
-        logMsg { "notify finish return:${result} uuid:${uuid}" }
+        logMsg { "notify ----- return:${result} uuid:${uuid}" }
         return result
     }
 
@@ -58,8 +58,8 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
         logMsg {
             buildString {
-                append("notify -----> $method")
-                append(" arg:${(if (args == null) "" else Arrays.toString(args))}")
+                append("notify +++++ $method")
+                append(" arg:${(if (args.isNullOrEmpty()) "" else Arrays.toString(args))}")
                 append(" tag:${_tag}")
                 append(" count:${listStream.size}")
                 append(" uuid:${uuid}")
@@ -124,10 +124,12 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             logMsg {
                 buildString {
                     append("notify")
-                    append(" index:${index}")
-                    append(" return:${if (isVoid) "" else itemResult}")
-                    append(" stream:$${stream}")
-                    append(" shouldBreakDispatch:${shouldBreakDispatch}")
+                    append(" ($index)")
+                    if (!isVoid) {
+                        append(" -> ($itemResult)")
+                    }
+                    append(" $stream")
+                    append(" break:${shouldBreakDispatch}")
                     append(" uuid:${uuid}")
                 }
             }
