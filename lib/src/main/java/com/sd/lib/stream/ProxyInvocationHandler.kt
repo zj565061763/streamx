@@ -59,7 +59,9 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         logMsg {
             buildString {
                 append("notify +++++ $method")
-                append(" arg:${(if (args.isNullOrEmpty()) "" else Arrays.toString(args))}")
+                if (!args.isNullOrEmpty()) {
+                    append(" arg:${Arrays.toString(args)}")
+                }
                 append(" tag:${_tag}")
                 append(" count:${listStream.size}")
                 append(" uuid:${uuid}")
