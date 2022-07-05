@@ -75,8 +75,14 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 method.invoke(defaultStream)
             }
             logMsg {
-                val returnLog = if (isVoid) "" else "return:${result}"
-                "notify default stream:${defaultStream} ${returnLog} uuid:${uuid}"
+                buildString {
+                    append("notify default stream")
+                    append(" (${defaultStream})")
+                    if (!isVoid) {
+                        append(" -> (${result})")
+                    }
+                    append(" uuid:${uuid}")
+                }
             }
             return result
         }
