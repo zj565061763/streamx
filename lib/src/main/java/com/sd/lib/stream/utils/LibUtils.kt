@@ -1,6 +1,8 @@
 package com.sd.lib.stream.utils
 
+import android.util.Log
 import com.sd.lib.stream.FStream
+import com.sd.lib.stream.FStreamManager
 import java.lang.reflect.Proxy
 
 internal object LibUtils {
@@ -31,5 +33,11 @@ internal object LibUtils {
             throw RuntimeException("stream class was not found in ${clazz}")
         }
         return collection
+    }
+}
+
+internal inline fun logMsg(block: () -> String) {
+    if (FStreamManager.isDebug) {
+        Log.i("FStream", block())
     }
 }

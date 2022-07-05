@@ -22,6 +22,7 @@ object FStreamManager {
     private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = ConcurrentHashMap()
     private val _mapStreamBinder: MutableMap<FStream, StreamBinder<*>> = WeakHashMap()
 
+    @JvmStatic
     var isDebug = false
 
     /**
