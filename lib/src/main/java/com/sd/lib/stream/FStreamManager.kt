@@ -114,7 +114,6 @@ object FStreamManager {
         return binder.bind().also { success ->
             if (success) {
                 _mapStreamBinder[stream] = binder
-                logMsg { "bind (${stream}) (${target}) size:${_mapStreamBinder.size}" }
             }
         }
     }
@@ -128,7 +127,6 @@ object FStreamManager {
     fun unbindStream(stream: FStream): Boolean {
         val binder = _mapStreamBinder.remove(stream) ?: return false
         binder.destroy()
-        logMsg { "unbind (${stream}) (${binder.target}) size:${_mapStreamBinder.size}" }
         return true
     }
 
