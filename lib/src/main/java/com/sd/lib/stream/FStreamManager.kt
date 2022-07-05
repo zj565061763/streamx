@@ -6,7 +6,7 @@ import android.view.View
 import com.sd.lib.stream.binder.ActivityStreamBinder
 import com.sd.lib.stream.binder.StreamBinder
 import com.sd.lib.stream.binder.ViewStreamBinder
-import com.sd.lib.stream.utils.LibUtils
+import com.sd.lib.stream.utils.findStreamClass
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -40,7 +40,7 @@ object FStreamManager {
         val connection = _mapStreamConnection[stream]
         if (connection != null) return connection
 
-        val classes = LibUtils.findStreamClass(stream.javaClass)
+        val classes = findStreamClass(stream.javaClass)
         for (clazz in classes) {
             var holder = _mapStreamHolder[clazz]
             if (holder == null) {

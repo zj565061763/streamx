@@ -3,7 +3,7 @@ package com.sd.lib.stream
 import com.sd.lib.stream.factory.DefaultStreamFactory
 import com.sd.lib.stream.factory.DefaultStreamFactory.CreateParam
 import com.sd.lib.stream.factory.WeakCacheStreamFactory
-import com.sd.lib.stream.utils.LibUtils
+import com.sd.lib.stream.utils.findStreamClass
 
 /**
  * 默认流管理
@@ -24,7 +24,7 @@ object DefaultStreamManager {
     @JvmStatic
     fun register(defaultClass: Class<out FStream>) {
         synchronized(this@DefaultStreamManager) {
-            val classes = LibUtils.findStreamClass(defaultClass)
+            val classes = findStreamClass(defaultClass)
             for (item in classes) {
                 _mapDefaultStreamClass[item] = defaultClass
             }
@@ -37,7 +37,7 @@ object DefaultStreamManager {
     @JvmStatic
     fun unregister(defaultClass: Class<out FStream>) {
         synchronized(this@DefaultStreamManager) {
-            val classes = LibUtils.findStreamClass(defaultClass)
+            val classes = findStreamClass(defaultClass)
             for (item in classes) {
                 _mapDefaultStreamClass.remove(item)
             }
