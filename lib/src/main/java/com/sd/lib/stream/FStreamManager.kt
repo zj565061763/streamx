@@ -50,7 +50,7 @@ object FStreamManager {
             }
 
             if (holder.add(stream)) {
-                logMsg { "+++++ register class:${clazz.name} stream:${stream} size:${holder.size}" }
+                logMsg { "+++++ (${clazz.name}) -> (${stream}) size:${holder.size}" }
             }
         }
 
@@ -72,7 +72,7 @@ object FStreamManager {
                 if (holder.size <= 0) {
                     _mapStreamHolder.remove(clazz)
                 }
-                logMsg { "----- unregister class:${clazz.name} stream:${stream} size:${holder.size}" }
+                logMsg { "----- (${clazz.name}) -> (${stream}) size:${holder.size}" }
             }
         }
     }
@@ -114,7 +114,7 @@ object FStreamManager {
         return binder.bind().also { success ->
             if (success) {
                 _mapStreamBinder[stream] = binder
-                logMsg { "bind stream:${stream} target:${target} size:${_mapStreamBinder.size}" }
+                logMsg { "bind (${stream}) (${target}) size:${_mapStreamBinder.size}" }
             }
         }
     }
