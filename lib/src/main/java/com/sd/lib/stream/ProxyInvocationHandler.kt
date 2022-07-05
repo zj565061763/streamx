@@ -1,6 +1,5 @@
 package com.sd.lib.stream
 
-import android.util.Log
 import com.sd.lib.stream.FStream.*
 import com.sd.lib.stream.utils.logMsg
 import java.lang.reflect.InvocationHandler
@@ -122,15 +121,15 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 }
             }
 
-            if (FStreamManager.isDebug) {
-                Log.i(
-                    FStream::class.java.simpleName, "notify"
-                            + " index:${index}"
-                            + " return:${if (isVoid) "" else itemResult}"
-                            + " stream:$${stream}"
-                            + " shouldBreakDispatch:${shouldBreakDispatch}"
-                            + " uuid:${uuid}"
-                )
+            logMsg {
+                buildString {
+                    append("notify")
+                    append(" index:${index}")
+                    append(" return:${if (isVoid) "" else itemResult}")
+                    append(" stream:$${stream}")
+                    append(" shouldBreakDispatch:${shouldBreakDispatch}")
+                    append(" uuid:${uuid}")
+                }
             }
 
             result = itemResult
