@@ -126,9 +126,9 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             logMsg {
                 buildString {
                     append("notify")
-                    append(" ($index)")
+                    append(" (${index})")
                     if (!isVoid) {
-                        append(" -> ($itemResult)")
+                        append(" -> (${itemResult})")
                     }
                     append(" $stream")
                     append(" break:${shouldBreakDispatch}")
