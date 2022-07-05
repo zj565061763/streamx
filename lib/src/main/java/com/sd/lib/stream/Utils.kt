@@ -33,8 +33,8 @@ internal fun findStreamClass(clazz: Class<*>): Collection<Class<out FStream>> {
     return collection
 }
 
-internal inline fun logMsg(block: () -> String) {
+internal inline fun logMsg(tag: String = "FStream", block: () -> String) {
     if (FStreamManager.isDebug) {
-        Log.i("FStream", block())
+        Log.i(tag, block())
     }
 }

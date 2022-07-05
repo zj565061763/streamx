@@ -1,12 +1,12 @@
 package com.sd.lib.stream
 
 import android.app.Activity
-import android.util.Log
 import android.view.View
 import com.sd.lib.stream.binder.ActivityStreamBinder
 import com.sd.lib.stream.binder.StreamBinder
 import com.sd.lib.stream.binder.ViewStreamBinder
 import com.sd.lib.stream.utils.findStreamClass
+import com.sd.lib.stream.utils.logMsg
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -50,12 +50,7 @@ object FStreamManager {
             }
 
             if (holder.add(stream)) {
-                if (isDebug) {
-                    Log.i(
-                        FStream::class.java.simpleName,
-                        "+++++ register class:${clazz.name} stream:${stream} size:${holder.size}"
-                    )
-                }
+                logMsg { "+++++ register class:${clazz.name} stream:${stream} size:${holder.size}" }
             }
         }
 
@@ -77,13 +72,7 @@ object FStreamManager {
                 if (holder.size <= 0) {
                     _mapStreamHolder.remove(clazz)
                 }
-
-                if (isDebug) {
-                    Log.i(
-                        FStream::class.java.simpleName,
-                        "----- unregister class:${clazz.name} stream:${stream} size:${holder.size}"
-                    )
-                }
+                logMsg { "----- unregister class:${clazz.name} stream:${stream} size:${holder.size}" }
             }
         }
     }
@@ -125,12 +114,7 @@ object FStreamManager {
         return binder.bind().also { success ->
             if (success) {
                 _mapStreamBinder[stream] = binder
-                if (isDebug) {
-                    Log.i(
-                        FStream::class.java.simpleName,
-                        "bind stream:${stream} target:${target} size:${_mapStreamBinder.size}"
-                    )
-                }
+                logMsg { "bind stream:${stream} target:${target} size:${_mapStreamBinder.size}" }
             }
         }
     }
@@ -144,12 +128,7 @@ object FStreamManager {
     fun unbindStream(stream: FStream): Boolean {
         val binder = _mapStreamBinder.remove(stream) ?: return false
         binder.destroy()
-        if (isDebug) {
-            Log.i(
-                FStream::class.java.simpleName,
-                "unbind stream:${stream} target:${binder.target} size:${_mapStreamBinder.size}"
-            )
-        }
+        logMsg { "unbind stream:${stream} target:${binder.target} size:${_mapStreamBinder.size}" }
         return true
     }
 

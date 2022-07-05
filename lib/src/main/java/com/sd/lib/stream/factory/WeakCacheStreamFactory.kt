@@ -1,9 +1,8 @@
 package com.sd.lib.stream.factory
 
-import android.util.Log
 import com.sd.lib.stream.FStream
-import com.sd.lib.stream.FStreamManager
 import com.sd.lib.stream.factory.DefaultStreamFactory.CreateParam
+import com.sd.lib.stream.utils.logMsg
 import java.lang.ref.ReferenceQueue
 import java.lang.ref.WeakReference
 
@@ -24,11 +23,8 @@ class WeakCacheStreamFactory : CacheableStreamFactory() {
         val ref = StreamRef(param.classStream, stream, _refQueue)
         _streamHolder[param.classStream] = ref
 
-        if (FStreamManager.isDebug) {
-            Log.i(
-                WeakCacheStreamFactory::class.java.simpleName,
-                "+++++ class:${param.classStream.name} stream:${stream} size:${_streamHolder.size}"
-            )
+        logMsg(WeakCacheStreamFactory::class.java.simpleName) {
+            "+++++ class:${param.classStream.name} stream:${stream} size:${_streamHolder.size}"
         }
     }
 
@@ -45,11 +41,8 @@ class WeakCacheStreamFactory : CacheableStreamFactory() {
         }
 
         if (count > 0) {
-            if (FStreamManager.isDebug) {
-                Log.i(
-                    WeakCacheStreamFactory::class.java.simpleName,
-                    "releaseReference count:${count} size:${_streamHolder.size}"
-                )
+            logMsg(WeakCacheStreamFactory::class.java.simpleName) {
+                "releaseReference count:${count} size:${_streamHolder.size}"
             }
         }
     }

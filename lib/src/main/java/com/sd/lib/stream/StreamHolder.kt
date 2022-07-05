@@ -1,6 +1,6 @@
 package com.sd.lib.stream
 
-import android.util.Log
+import com.sd.lib.stream.utils.logMsg
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -67,10 +67,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
             }
             _isNeedSort = false
         }
-
-        if (FStreamManager.isDebug) {
-            Log.i(FStream::class.java.simpleName, "sort stream for class:${_class.name}")
-        }
+        logMsg { "sort stream for class:${_class.name}" }
     }
 
     /**
@@ -86,12 +83,6 @@ internal class StreamHolder(clazz: Class<out FStream>) {
             }
             _isNeedSort = _priorityStreamHolder.isNotEmpty()
         }
-
-        if (FStreamManager.isDebug) {
-            Log.i(
-                FStream::class.java.simpleName,
-                "notifyPriorityChanged priority:${priority} clazz:${clazz.name} priorityStreamHolder size:${_priorityStreamHolder.size} stream:${stream}"
-            )
-        }
+        logMsg { "notifyPriorityChanged priority:${priority} clazz:${clazz.name} priorityStreamHolder size:${_priorityStreamHolder.size} stream:${stream}" }
     }
 }

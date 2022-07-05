@@ -2,6 +2,7 @@ package com.sd.lib.stream
 
 import android.util.Log
 import com.sd.lib.stream.FStream.*
+import com.sd.lib.stream.utils.logMsg
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.util.*
@@ -46,18 +47,10 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             } else {
                 0
             }
-
-            if (FStreamManager.isDebug) {
-                Log.i(
-                    FStream::class.java.simpleName,
-                    "return type:${returnType} but method result is null, so set to ${result} uuid:${uuid}"
-                )
-            }
+            logMsg { "return type:${returnType} but method result is null, so set to $result uuid:${uuid}" }
         }
 
-        if (FStreamManager.isDebug) {
-            Log.i(FStream::class.java.simpleName, "notify finish return:${result} uuid:${uuid}")
-        }
+        logMsg { "notify finish return:${result} uuid:${uuid}" }
         return result
     }
 
@@ -82,10 +75,9 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             } else {
                 method.invoke(defaultStream)
             }
-
-            if (FStreamManager.isDebug) {
+            logMsg {
                 val returnLog = if (isVoid) "" else "return:${result}"
-                Log.i(FStream::class.java.simpleName, "notify default stream:${defaultStream} ${returnLog} uuid:${uuid}")
+                "notify default stream:${defaultStream} ${returnLog} uuid:${uuid}"
             }
             return result
         }
@@ -98,9 +90,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         for (stream in listStream) {
             val connection = FStreamManager.getConnection(stream)
             if (connection == null) {
-                if (FStreamManager.isDebug) {
-                    Log.e(FStream::class.java.simpleName, "${StreamConnection::class.java.simpleName} is null uuid:${uuid}")
-                }
+                logMsg { "${StreamConnection::class.java.simpleName} is null uuid:${uuid}" }
                 continue
             }
 
@@ -109,9 +99,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             }
 
             if (_beforeDispatchCallback?.dispatch(stream, method, args) == true) {
-                if (FStreamManager.isDebug) {
-                    Log.i(FStream::class.java.simpleName, "dispatch broken before uuid:${uuid}")
-                }
+                logMsg { "dispatch broken before uuid:${uuid}" }
                 break
             }
 
@@ -151,9 +139,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             }
 
             if (_afterDispatchCallback?.dispatch(stream, method, args, itemResult) == true) {
-                if (FStreamManager.isDebug) {
-                    Log.i(FStream::class.java.simpleName, "dispatch broken after uuid:${uuid}")
-                }
+                logMsg { "dispatch broken after uuid:${uuid}" }
                 break
             }
 
@@ -166,9 +152,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
         if (filterResult && listResult!!.isNotEmpty()) {
             result = _resultFilter!!.filter(method, args, listResult)
-            if (FStreamManager.isDebug) {
-                Log.i(FStream::class.java.simpleName, "proxy filter result:${result} uuid:${uuid}")
-            }
+            logMsg { "proxy filter result:${result} uuid:${uuid}" }
         }
         return result
     }
