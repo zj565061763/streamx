@@ -57,14 +57,14 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
     private fun processMainLogic(isVoid: Boolean, method: Method, args: Array<Any?>?, uuid: String?): Any? {
         val listStream = FStreamManager.getStreamHolder(_streamClass)?.toCollection() ?: listOf()
 
-        if (FStreamManager.isDebug) {
-            Log.i(
-                FStream::class.java.simpleName, "notify -----> $method"
-                        + " arg:${(if (args == null) "" else Arrays.toString(args))}"
-                        + " tag:${_tag}"
-                        + " count:${listStream.size}"
-                        + " uuid:${uuid}"
-            )
+        logMsg {
+            buildString {
+                append("notify -----> $method")
+                append(" arg:${(if (args == null) "" else Arrays.toString(args))}")
+                append(" tag:${_tag}")
+                append(" count:${listStream.size}")
+                append(" uuid:${uuid}")
+            }
         }
 
         if (listStream.isEmpty()) {
