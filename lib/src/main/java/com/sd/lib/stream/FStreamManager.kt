@@ -129,4 +129,9 @@ object FStreamManager {
     internal fun getStreamHolder(clazz: Class<out FStream>): StreamHolder? {
         return _mapStreamHolder[clazz]
     }
+
+    @Synchronized
+    internal fun getStreams(clazz: Class<out FStream>): Collection<FStream>? {
+        return _mapStreamHolder[clazz]?.toCollection()
+    }
 }

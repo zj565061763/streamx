@@ -64,7 +64,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             }
         }
 
-        val listStream = FStreamManager.getStreamHolder(_streamClass)?.toCollection()
+        val listStream = FStreamManager.getStreams(_streamClass)
         if (listStream.isNullOrEmpty()) {
             // 尝试创建默认流对象
             val defaultStream = DefaultStreamManager.getStream(_streamClass) ?: return null
