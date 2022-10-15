@@ -5,8 +5,6 @@ import android.view.View
 import com.sd.lib.stream.binder.ActivityStreamBinder
 import com.sd.lib.stream.binder.StreamBinder
 import com.sd.lib.stream.binder.ViewStreamBinder
-import com.sd.lib.stream.utils.findStreamClass
-import com.sd.lib.stream.utils.logMsg
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 

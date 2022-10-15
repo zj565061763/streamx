@@ -1,7 +1,6 @@
 package com.sd.lib.stream
 
 import com.sd.lib.stream.FStream.*
-import com.sd.lib.stream.utils.logMsg
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.util.*

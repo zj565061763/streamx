@@ -2,7 +2,7 @@ package com.sd.lib.stream.factory
 
 import com.sd.lib.stream.FStream
 import com.sd.lib.stream.factory.DefaultStreamFactory.CreateParam
-import com.sd.lib.stream.utils.logMsg
+import com.sd.lib.stream.logMsg
 import java.lang.ref.ReferenceQueue
 import java.lang.ref.WeakReference
 

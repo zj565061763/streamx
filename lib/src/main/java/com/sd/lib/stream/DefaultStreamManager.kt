@@ -3,7 +3,6 @@ package com.sd.lib.stream
 import com.sd.lib.stream.factory.DefaultStreamFactory
 import com.sd.lib.stream.factory.DefaultStreamFactory.CreateParam
 import com.sd.lib.stream.factory.WeakCacheStreamFactory
-import com.sd.lib.stream.utils.findStreamClass
 
 /**
  * 默认流管理
