@@ -6,7 +6,6 @@ import com.sd.lib.stream.binder.ActivityStreamBinder
 import com.sd.lib.stream.binder.StreamBinder
 import com.sd.lib.stream.binder.ViewStreamBinder
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 流管理类
@@ -16,19 +15,12 @@ object FStreamManager {
     @JvmStatic
     val instance by lazy { FStreamManager }
 
-    private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = ConcurrentHashMap()
-    private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = ConcurrentHashMap()
+    private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = HashMap()
+    private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = HashMap()
     private val _mapStreamBinder: MutableMap<FStream, StreamBinder<*>> = WeakHashMap()
 
     @JvmStatic
     var isDebug = false
-
-    /**
-     * 返回[stream]的连接对象
-     */
-    fun getConnection(stream: FStream): StreamConnection? {
-        return _mapStreamConnection[stream]
-    }
 
     /**
      * 注册流对象
@@ -125,6 +117,15 @@ object FStreamManager {
         return true
     }
 
+    /**
+     * 返回[stream]的连接对象
+     */
+    @Synchronized
+    fun getConnection(stream: FStream): StreamConnection? {
+        return _mapStreamConnection[stream]
+    }
+
+    @Synchronized
     internal fun getStreamHolder(clazz: Class<out FStream>): StreamHolder? {
         return _mapStreamHolder[clazz]
     }
