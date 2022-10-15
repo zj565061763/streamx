@@ -9,10 +9,10 @@ def libArtifactId = "streamx"
 def libVersionName = "1.0.0-beta05"
 
 android {
-    compileSdk 32
+    compileSdk 33
     defaultConfig {
         minSdk 19
-        targetSdk 32
+        targetSdk 33
     }
 
     buildTypes {

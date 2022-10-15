@@ -4,12 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk 32
-
+    compileSdk 33
     defaultConfig {
-        applicationId "com.sd.lib.demo.streamx"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
+        applicationId "com.sd.lib.demo.streamx"
         versionCode 1
         versionName "1.0"
 
