@@ -50,23 +50,14 @@ internal class StreamHolder(clazz: Class<out FStream>) {
      * 返回流集合
      */
     fun toCollection(): Collection<FStream> {
-        sort()
-        return _streamHolder
-    }
-
-    /**
-     * 排序
-     */
-    private fun sort() {
-        if (!_isNeedSort) return
-        if (_streamHolder.size <= 1) return
-
-        _streamHolder.sortByDescending {
-            FStreamManager.getConnection(it)!!.getPriority(_class)
+        if (_isNeedSort && _streamHolder.size > 1) {
+            _streamHolder.sortByDescending {
+                FStreamManager.getConnection(it)!!.getPriority(_class)
+            }
+            _isNeedSort = false
+            logMsg { "sort ${_class.name}" }
         }
-        _isNeedSort = false
-
-        logMsg { "sort ${_class.name}" }
+        return _streamHolder
     }
 
     /**
