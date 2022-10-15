@@ -5,7 +5,6 @@ import com.sd.lib.stream.factory.DefaultStreamFactory.CreateParam
 
 abstract class CacheableStreamFactory : DefaultStreamFactory {
 
-    @Synchronized
     final override fun create(param: CreateParam): FStream {
         val cache = getCache(param)
         if (cache != null) return cache
