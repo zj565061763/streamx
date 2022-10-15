@@ -31,12 +31,12 @@ class WeakCacheStreamFactory : CacheableStreamFactory() {
     private fun releaseReference() {
         var count = 0
         while (true) {
-            val reference = _refQueue.poll()
+            val reference = _refQueue.poll() ?: break
             if (reference is StreamRef) {
                 _streamHolder.remove(reference.clazz)
                 count++
             } else {
-                break
+                error("Unknown ref $reference")
             }
         }
 
