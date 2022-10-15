@@ -113,7 +113,9 @@ internal abstract class ConnectionItem {
      * 重置停止分发标志
      */
     fun resetBreakDispatch() {
-        shouldBreakDispatch = false
+        synchronized(this@ConnectionItem) {
+            shouldBreakDispatch = false
+        }
     }
 
     /**
