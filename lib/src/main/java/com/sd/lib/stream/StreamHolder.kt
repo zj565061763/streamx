@@ -18,7 +18,6 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private val _priorityStreamHolder: MutableMap<FStream, Int> = HashMap()
 
     /** 是否需要排序  */
-    @Volatile
     private var _isNeedSort = false
 
     /** 流对象数量 */
