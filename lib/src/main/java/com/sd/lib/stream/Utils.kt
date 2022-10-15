@@ -1,8 +1,7 @@
-package com.sd.lib.stream.utils
+package com.sd.lib.stream
 
 import android.util.Log
 import com.sd.lib.stream.FStream
-import com.sd.lib.stream.FStreamManager
 import java.lang.reflect.Proxy
 
 /**
