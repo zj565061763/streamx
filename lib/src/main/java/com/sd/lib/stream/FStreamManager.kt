@@ -40,11 +40,8 @@ object FStreamManager {
 
         val classes = findStreamClass(stream.javaClass)
         for (clazz in classes) {
-            var holder = _mapStreamHolder[clazz]
-            if (holder == null) {
-                holder = StreamHolder(clazz).also {
-                    _mapStreamHolder[clazz] = it
-                }
+            val holder = _mapStreamHolder[clazz] ?: StreamHolder(clazz).also {
+                _mapStreamHolder[clazz] = it
             }
 
             if (holder.add(stream)) {
