@@ -63,7 +63,7 @@ class StreamConnection internal constructor(
         val mapItem = classes.associateWith { item ->
             object : ConnectionItem() {
                 override fun onPriorityChanged(priority: Int) {
-                    FStreamManager.getStreamHolder(item)?.notifyPriorityChanged(priority, _stream, item)
+                    FStreamManager.notifyPriorityChanged(priority, _stream, item)
                 }
             }
         }

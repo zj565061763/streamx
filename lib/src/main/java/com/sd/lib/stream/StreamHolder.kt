@@ -74,15 +74,15 @@ internal class StreamHolder(clazz: Class<out FStream>) {
      * 通知优先级变化
      */
     fun notifyPriorityChanged(priority: Int, stream: FStream, clazz: Class<out FStream>) {
-        synchronized(FStreamManager) {
-            if (!_streamHolder.contains(stream)) return
-            if (priority == 0) {
-                _priorityStreamHolder.remove(stream)
-            } else {
-                _priorityStreamHolder[stream] = priority
-            }
-            _isNeedSort = _priorityStreamHolder.isNotEmpty()
+        if (!_streamHolder.contains(stream)) return
+
+        if (priority == 0) {
+            _priorityStreamHolder.remove(stream)
+        } else {
+            _priorityStreamHolder[stream] = priority
         }
+        _isNeedSort = _priorityStreamHolder.isNotEmpty()
+
         logMsg { "notifyPriorityChanged (${priority}) (${clazz.name}) -> (${stream}) prioritySize:${_priorityStreamHolder.size}" }
     }
 }
