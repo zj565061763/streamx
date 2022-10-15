@@ -15,7 +15,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private val _streamHolder: MutableList<FStream> = CopyOnWriteArrayList()
 
     /** 设置了优先级的流对象  */
-    private val _priorityStreamHolder: MutableMap<FStream, Int> = HashMap()
+    private val _priorityStreamHolder: MutableSet<FStream> = HashSet()
 
     /** 是否需要排序  */
     private var _isNeedSort = false
@@ -69,7 +69,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
         if (priority == 0) {
             _priorityStreamHolder.remove(stream)
         } else {
-            _priorityStreamHolder[stream] = priority
+            _priorityStreamHolder.add(stream)
         }
         _isNeedSort = _priorityStreamHolder.isNotEmpty()
 
