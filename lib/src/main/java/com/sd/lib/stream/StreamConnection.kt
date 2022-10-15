@@ -21,7 +21,7 @@ class StreamConnection internal constructor(
     @JvmOverloads
     fun getPriority(clazz: Class<out FStream>? = null): Int {
         return if (clazz != null) {
-            _mapItem[clazz]!!.priority
+            getItem(clazz).priority
         } else {
             check(_mapItem.size == 1) { "You should specified target class" }
             _mapItem.values.first().priority
@@ -34,7 +34,7 @@ class StreamConnection internal constructor(
     @JvmOverloads
     fun setPriority(priority: Int, clazz: Class<out FStream>? = null) {
         if (clazz != null) {
-            _mapItem[clazz]!!.setPriority(priority)
+            getItem(clazz).setPriority(priority)
         } else {
             for (item in _mapItem.values) {
                 item.setPriority(priority)
@@ -48,7 +48,7 @@ class StreamConnection internal constructor(
     @JvmOverloads
     fun breakDispatch(clazz: Class<out FStream>? = null) {
         if (clazz != null) {
-            _mapItem[clazz]!!.breakDispatch()
+            getItem(clazz).breakDispatch()
         } else {
             check(_mapItem.size == 1) { "You should specified target class" }
             _mapItem.values.first().breakDispatch()
