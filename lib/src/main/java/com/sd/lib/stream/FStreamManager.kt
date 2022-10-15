@@ -23,6 +23,14 @@ object FStreamManager {
     var isDebug = false
 
     /**
+     * 返回[stream]的连接对象
+     */
+    @Synchronized
+    fun getConnection(stream: FStream): StreamConnection? {
+        return _mapStreamConnection[stream]
+    }
+
+    /**
      * 注册流对象
      */
     @Synchronized
@@ -115,14 +123,6 @@ object FStreamManager {
         val binder = _mapStreamBinder.remove(stream) ?: return false
         binder.destroy()
         return true
-    }
-
-    /**
-     * 返回[stream]的连接对象
-     */
-    @Synchronized
-    fun getConnection(stream: FStream): StreamConnection? {
-        return _mapStreamConnection[stream]
     }
 
     @Synchronized
