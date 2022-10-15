@@ -1,6 +1,5 @@
 package com.sd.lib.stream
 
-import com.sd.lib.stream.factory.DefaultStreamFactory
 import com.sd.lib.stream.factory.DefaultStreamFactory.CreateParam
 import com.sd.lib.stream.factory.WeakCacheStreamFactory
 
@@ -15,7 +14,7 @@ object DefaultStreamManager {
     private val _mapDefaultStreamClass: MutableMap<Class<out FStream>, Class<out FStream>> = HashMap()
 
     /** 默认流对象工厂 */
-    var streamFactory: DefaultStreamFactory = WeakCacheStreamFactory()
+    private var _streamFactory = WeakCacheStreamFactory()
 
     /**
      * 注册默认流class
@@ -47,6 +46,6 @@ object DefaultStreamManager {
     @Synchronized
     internal fun getStream(clazz: Class<out FStream>): FStream? {
         val defaultClass = _mapDefaultStreamClass[clazz] ?: return null
-        return streamFactory.create(CreateParam(clazz, defaultClass))
+        return _streamFactory.create(CreateParam(clazz, defaultClass))
     }
 }
