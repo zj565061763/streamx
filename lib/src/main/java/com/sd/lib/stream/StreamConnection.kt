@@ -23,8 +23,7 @@ class StreamConnection internal constructor(
         return if (clazz != null) {
             getItem(clazz).priority
         } else {
-            check(_mapItem.size == 1) { "You should specified target class" }
-            _mapItem.values.first().priority
+            getSingleItem().priority
         }
     }
 
@@ -36,8 +35,7 @@ class StreamConnection internal constructor(
         if (clazz != null) {
             getItem(clazz).setPriority(priority)
         } else {
-            check(_mapItem.size == 1) { "You should specified target class" }
-            _mapItem.values.first().setPriority(priority)
+            getSingleItem().setPriority(priority)
         }
     }
 
@@ -49,13 +47,17 @@ class StreamConnection internal constructor(
         if (clazz != null) {
             getItem(clazz).breakDispatch()
         } else {
-            check(_mapItem.size == 1) { "You should specified target class" }
-            _mapItem.values.first().breakDispatch()
+            getSingleItem().breakDispatch()
         }
     }
 
     internal fun getItem(clazz: Class<out FStream>): ConnectionItem {
         return _mapItem[clazz]!!
+    }
+
+    private fun getSingleItem(): ConnectionItem {
+        check(_mapItem.size == 1) { "You should specified target class" }
+        return _mapItem.values.first()
     }
 
     init {
