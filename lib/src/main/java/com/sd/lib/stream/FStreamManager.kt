@@ -17,7 +17,6 @@ object FStreamManager {
 
     private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = HashMap()
     private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = HashMap()
-    private val _mapStreamBinder: MutableMap<FStream, StreamBinder<*>> = WeakHashMap()
 
     @JvmStatic
     var isDebug = false
@@ -91,6 +90,8 @@ object FStreamManager {
     fun bindView(stream: FStream, target: View): Boolean {
         return bindStreamInternal(stream, target) { ViewStreamBinder(stream, target) }
     }
+
+    private val _mapStreamBinder: MutableMap<FStream, StreamBinder<*>> = WeakHashMap()
 
     @Synchronized
     private fun <T> bindStreamInternal(stream: FStream, target: T, factory: () -> StreamBinder<T>): Boolean {
