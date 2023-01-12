@@ -121,7 +121,10 @@ interface FStream {
          */
         @JvmOverloads
         @JvmStatic
-        fun <T : FStream> buildProxy(clazz: Class<T>, block: (ProxyBuilder.() -> Unit)? = null): T {
+        fun <T : FStream> buildProxy(
+            clazz: Class<T>,
+            block: (ProxyBuilder.() -> Unit)? = null,
+        ): T {
             val builder = ProxyBuilder()
             block?.invoke(builder)
             return builder.build(clazz)
