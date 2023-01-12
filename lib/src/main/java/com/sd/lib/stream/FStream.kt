@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.View
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
-import kotlin.reflect.KClass
 
 /**
  * 流接口
@@ -121,7 +120,7 @@ interface FStream {
          */
         @JvmOverloads
         @JvmStatic
-        fun <T : FStream> buildProxy(
+        fun <T : FStream> proxy(
             clazz: Class<T>,
             block: (ProxyBuilder.() -> Unit)? = null,
         ): T {
@@ -133,10 +132,12 @@ interface FStream {
 }
 
 /**
- * 创建代理对象
+ * 创建[T]的代理对象
  */
-fun <T : FStream> KClass<T>.buildProxy(block: FStream.ProxyBuilder.() -> Unit = {}): T {
-    return FStream.buildProxy(this.java, block)
+inline fun <reified T : FStream> fStream(
+    noinline block: (FStream.ProxyBuilder.() -> Unit)? = null,
+): T {
+    return FStream.proxy(T::class.java, block)
 }
 
 /**
