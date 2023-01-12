@@ -14,15 +14,6 @@ internal class ActivityStreamBinder(
     target: Activity,
 ) : StreamBinder<Activity>(stream, target) {
 
-    private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
-        override fun onViewAttachedToWindow(v: View) {
-        }
-
-        override fun onViewDetachedFromWindow(v: View) {
-            destroy()
-        }
-    }
-
     override fun bindImpl(target: Activity): Boolean {
         if (target.isFinishing) return false
 
@@ -30,11 +21,20 @@ internal class ActivityStreamBinder(
             "Bind stream failed because activity's window is null."
         }.decorView
 
-        return registerStream().also {
-            if (it) {
+        return registerStream().also { register ->
+            if (register) {
                 decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
                 decorView.addOnAttachStateChangeListener(_onAttachStateChangeListener)
             }
+        }
+    }
+
+    private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
+        override fun onViewAttachedToWindow(v: View) {
+        }
+
+        override fun onViewDetachedFromWindow(v: View) {
+            destroy()
         }
     }
 
