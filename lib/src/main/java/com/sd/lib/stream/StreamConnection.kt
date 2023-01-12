@@ -36,9 +36,8 @@ class StreamConnection internal constructor(
         if (clazz != null) {
             getItem(clazz).setPriority(priority)
         } else {
-            for (item in _mapItem.values) {
-                item.setPriority(priority)
-            }
+            check(_mapItem.size == 1) { "You should specified target class" }
+            _mapItem.values.first().setPriority(priority)
         }
     }
 
