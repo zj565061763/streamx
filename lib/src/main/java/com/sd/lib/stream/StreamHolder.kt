@@ -4,8 +4,6 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * 流对象持有者，保存流接口映射的流对象列表
- *
- * 注意：此类的方法要考虑同步[FStreamManager]对象
  */
 internal class StreamHolder(clazz: Class<out FStream>) {
     /** 流接口 */
