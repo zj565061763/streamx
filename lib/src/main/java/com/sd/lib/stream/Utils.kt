@@ -18,6 +18,7 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
         if (interfaces.isEmpty()) break
 
         for (item in interfaces) {
+            if (FStream::class.java == item) continue
             if (FStream::class.java.isAssignableFrom(item)) {
                 collection.add(item as Class<out FStream>)
             }
