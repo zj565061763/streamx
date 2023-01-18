@@ -42,7 +42,6 @@ object FStreamManager {
             val holder = _streamHolder[clazz] ?: StreamHolder(clazz).also {
                 _streamHolder[clazz] = it
             }
-
             if (holder.add(stream)) {
                 logMsg { "+++++ (${clazz.name}) -> (${stream}) size:${holder.size}" }
             }
