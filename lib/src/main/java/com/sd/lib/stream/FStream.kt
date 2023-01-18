@@ -218,6 +218,13 @@ fun FStream.unregisterStream() {
 }
 
 /**
+ * [FStream.getConnection]
+ */
+fun FStream.getStreamConnection(): StreamConnection? {
+    return FStream.getConnection(this)
+}
+
+/**
  * [FStream.bindActivity]
  */
 fun FStream.bindActivity(activity: Activity): Boolean {

@@ -39,8 +39,8 @@ class ExampleInstrumentedTest {
         stream0.registerStream()
         stream1.registerStream()
 
-        Assert.assertNotNull(FStreamManager.getConnection(stream0))
-        Assert.assertNotNull(FStreamManager.getConnection(stream1))
+        Assert.assertNotNull(stream0.getStreamConnection())
+        Assert.assertNotNull(stream1.getStreamConnection())
 
         val builder = StringBuilder()
         val proxy = fStream<TestBuildStream>()
@@ -59,8 +59,8 @@ class ExampleInstrumentedTest {
         Assert.assertEquals("", builder.toString())
         builder.clear()
 
-        Assert.assertNull(FStreamManager.getConnection(stream0))
-        Assert.assertNull(FStreamManager.getConnection(stream1))
+        Assert.assertNotNull(stream0.getStreamConnection())
+        Assert.assertNotNull(stream1.getStreamConnection())
     }
 
     @Test
@@ -177,9 +177,9 @@ class ExampleInstrumentedTest {
         stream1.registerStream().setPriority(1)
         stream2.registerStream()
 
-        Assert.assertEquals(-1, FStreamManager.getConnection(stream0)!!.getPriority())
-        Assert.assertEquals(1, FStreamManager.getConnection(stream1)!!.getPriority())
-        Assert.assertEquals(0, FStreamManager.getConnection(stream2)!!.getPriority())
+        Assert.assertEquals(-1, stream0.getStreamConnection()!!.getPriority())
+        Assert.assertEquals(1, stream1.getStreamConnection()!!.getPriority())
+        Assert.assertEquals(0, stream2.getStreamConnection()!!.getPriority())
 
         val builder = StringBuilder()
         val proxy = fStream<TestBuildStream>()
@@ -364,7 +364,7 @@ class ExampleInstrumentedTest {
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
-                FStreamManager.getConnection(this)!!.breakDispatch()
+                getStreamConnection()!!.breakDispatch()
                 return "1"
             }
 
