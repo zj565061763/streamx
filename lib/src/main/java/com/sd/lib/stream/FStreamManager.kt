@@ -37,7 +37,7 @@ object FStreamManager {
         val connection = _mapStreamConnection[stream]
         if (connection != null) return connection
 
-        val classes = findStreamClass(stream.javaClass)
+        val classes = findStreamInterface(stream.javaClass)
         for (clazz in classes) {
             val holder = _mapStreamHolder[clazz] ?: StreamHolder(clazz).also {
                 _mapStreamHolder[clazz] = it

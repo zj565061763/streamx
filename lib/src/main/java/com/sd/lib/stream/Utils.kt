@@ -1,13 +1,12 @@
 package com.sd.lib.stream
 
 import android.util.Log
-import com.sd.lib.stream.FStream
 import java.lang.reflect.Proxy
 
 /**
  * 查找[clazz]的所有流接口
  */
-internal fun findStreamClass(clazz: Class<*>): Collection<Class<out FStream>> {
+internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>> {
     require(!Proxy.isProxyClass(clazz)) { "proxy class is not supported" }
     val collection = HashSet<Class<out FStream>>()
 
