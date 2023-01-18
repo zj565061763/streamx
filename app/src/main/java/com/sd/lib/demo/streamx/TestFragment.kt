@@ -17,10 +17,6 @@ class TestFragment : Fragment() {
          * 设置代理对象的tag，默认tag为null
          * 注意：只有tag和当前代理对象tag相等的流对象才会被通知到
          */
-        /**
-         * 设置代理对象的tag，默认tag为null
-         * 注意：只有tag和当前代理对象tag相等的流对象才会被通知到
-         */
         this.setTag(null)
     }
 
