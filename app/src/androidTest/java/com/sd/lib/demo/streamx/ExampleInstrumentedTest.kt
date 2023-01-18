@@ -2,7 +2,6 @@ package com.sd.lib.demo.streamx
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sd.lib.demo.streamx.utils.TestBuildStream
-import com.sd.lib.demo.streamx.utils.TestDefaultStream
 import com.sd.lib.demo.streamx.utils.TestStream
 import com.sd.lib.stream.*
 import org.junit.Assert
@@ -143,32 +142,6 @@ class ExampleInstrumentedTest {
 
         stream0.unregisterStream()
         stream1.unregisterStream()
-    }
-
-    @Test
-    fun testDefaultStream() {
-        val proxy = fStream<TestStream>()
-        DefaultStreamManager.register(TestDefaultStream::class.java)
-
-        val stream0 = object : TestStream {
-            override fun getContent(url: String): String {
-                Assert.assertEquals("http", url)
-                return "0"
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
-        }
-
-        stream0.registerStream()
-        Assert.assertEquals("0", proxy.getContent("http"))
-
-        stream0.unregisterStream()
-        Assert.assertEquals("default@http", proxy.getContent("http"))
-
-        DefaultStreamManager.unregister(TestDefaultStream::class.java)
-        Assert.assertEquals(null, proxy.getContent("http"))
     }
 
     @Test
