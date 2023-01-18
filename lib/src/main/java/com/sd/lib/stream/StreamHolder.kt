@@ -48,7 +48,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
      * 返回流集合
      */
     fun toCollection(): Collection<FStream> {
-        if (_isNeedSort && _streamHolder.size > 1) {
+        if (_isNeedSort) {
             _streamHolder.sortByDescending {
                 FStreamManager.getConnection(it)!!.getPriority(_class)
             }
