@@ -122,9 +122,10 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 }
             }
 
-            result = itemResult
-            if (filterResult) {
-                listResult!!.add(itemResult)
+            result = itemResult.also {
+                if (filterResult) {
+                    listResult!!.add(it)
+                }
             }
 
             if (_afterDispatchCallback?.dispatch(stream, method, args, itemResult) == true) {
