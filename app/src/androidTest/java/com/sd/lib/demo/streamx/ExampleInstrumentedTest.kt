@@ -43,7 +43,7 @@ class ExampleInstrumentedTest {
         Assert.assertNotNull(stream1.getStreamConnection())
 
         val builder = StringBuilder()
-        val proxy = fStream<TestBuildStream>()
+        val proxy = fStreamProxy<TestBuildStream>()
 
         proxy.build(builder)
         Assert.assertEquals("01", builder.toString())
@@ -65,7 +65,7 @@ class ExampleInstrumentedTest {
 
     @Test
     fun testUnregisterWhenDispatch() {
-        val proxy = fStream<TestStream>()
+        val proxy = fStreamProxy<TestStream>()
 
         val stream0 = object : TestStream {
             override fun getContent(url: String): String {
@@ -133,7 +133,7 @@ class ExampleInstrumentedTest {
         stream1.registerStream()
 
         val builder = StringBuilder()
-        val proxy = fStream<TestBuildStream> {
+        val proxy = fStreamProxy<TestBuildStream> {
             setTag("none null tag")
         }
 
@@ -182,7 +182,7 @@ class ExampleInstrumentedTest {
         Assert.assertEquals(0, stream2.getStreamConnection()!!.getPriority())
 
         val builder = StringBuilder()
-        val proxy = fStream<TestBuildStream>()
+        val proxy = fStreamProxy<TestBuildStream>()
 
         proxy.build(builder)
         Assert.assertEquals("120", builder.toString())
@@ -229,7 +229,7 @@ class ExampleInstrumentedTest {
         stream1.registerStream()
         stream2.registerStream()
 
-        val proxy = fStream<TestStream> {
+        val proxy = fStreamProxy<TestStream> {
             setBeforeDispatchCallback { _, _, _ ->
                 true
             }
@@ -280,7 +280,7 @@ class ExampleInstrumentedTest {
         stream1.registerStream()
         stream2.registerStream()
 
-        val proxy = fStream<TestStream> {
+        val proxy = fStreamProxy<TestStream> {
             setAfterDispatchCallback { _, _, _, methodResult ->
                 "1" == methodResult
             }
@@ -331,7 +331,7 @@ class ExampleInstrumentedTest {
         stream1.registerStream()
         stream2.registerStream()
 
-        val proxy = fStream<TestStream> {
+        val proxy = fStreamProxy<TestStream> {
             setResultFilter { _, _, results ->
                 Assert.assertEquals(3, results.size)
                 Assert.assertEquals("0", results[0])
@@ -387,7 +387,7 @@ class ExampleInstrumentedTest {
         stream1.registerStream()
         stream2.registerStream()
 
-        val proxy = fStream<TestStream> {
+        val proxy = fStreamProxy<TestStream> {
             setResultFilter { _, _, results ->
                 Assert.assertEquals(2, results.size)
                 Assert.assertEquals("0", results[0])

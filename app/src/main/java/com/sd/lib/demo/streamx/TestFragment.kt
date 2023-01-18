@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.sd.lib.stream.FStream
-import com.sd.lib.stream.fStream
+import com.sd.lib.stream.fStreamProxy
 
 class TestFragment : Fragment() {
 
     /** 创建接口代理对象  */
-    private val _callback = fStream<FragmentCallback> {
+    private val _callback = fStreamProxy<FragmentCallback> {
         /**
          * 设置代理对象的tag，默认tag为null
          * 注意：只有tag和当前代理对象tag相等的流对象才会被通知到

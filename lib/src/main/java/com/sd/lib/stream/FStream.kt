@@ -197,7 +197,7 @@ interface FStream {
 /**
  * 创建[T]的代理对象
  */
-inline fun <reified T : FStream> fStream(
+inline fun <reified T : FStream> fStreamProxy(
     noinline block: (FStream.ProxyBuilder.() -> Unit)? = null,
 ): T {
     return FStream.proxy(T::class.java, block)
