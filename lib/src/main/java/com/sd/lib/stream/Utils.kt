@@ -7,16 +7,17 @@ import java.lang.reflect.Proxy
  * 查找[clazz]的所有流接口
  */
 internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>> {
-    require(!Proxy.isProxyClass(clazz)) { "proxy class is not supported" }
+    require(!Proxy.isProxyClass(clazz)) { "class should not be proxy" }
+    require(!clazz.isInterface) { "class should not be an interface" }
+
     val collection = HashSet<Class<out FStream>>()
-
     var current = clazz
-    while (FStream::class.java.isAssignableFrom(current)) {
-        if (current.isInterface) {
-            throw RuntimeException("class must not be an interface")
-        }
 
-        for (item in current.interfaces) {
+    while (FStream::class.java.isAssignableFrom(current)) {
+        val interfaces = current.interfaces
+        if (interfaces.isEmpty()) break
+
+        for (item in interfaces) {
             if (FStream::class.java.isAssignableFrom(item)) {
                 collection.add(item as Class<out FStream>)
             }
@@ -25,9 +26,7 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
         current = current.superclass ?: break
     }
 
-    if (collection.isEmpty()) {
-        throw RuntimeException("stream class was not found in ${clazz}")
-    }
+    check(collection.isNotEmpty()) { "stream interface was not found in $clazz" }
     return collection
 }
 
