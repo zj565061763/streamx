@@ -20,48 +20,51 @@ object FStreamManager {
     /**
      * 返回[stream]的连接对象
      */
-    @Synchronized
     fun getConnection(stream: FStream): StreamConnection? {
-        return _mapStreamConnection[stream]
+        synchronized(this@FStreamManager) {
+            return _mapStreamConnection[stream]
+        }
     }
 
     /**
      * 注册流对象
      */
-    @Synchronized
     fun register(stream: FStream): StreamConnection {
-        val connection = _mapStreamConnection[stream]
-        if (connection != null) return connection
+        synchronized(this@FStreamManager) {
+            val connection = _mapStreamConnection[stream]
+            if (connection != null) return connection
 
-        val classes = findStreamInterface(stream.javaClass)
-        for (clazz in classes) {
-            val holder = _mapStreamHolder[clazz] ?: StreamHolder(clazz).also {
-                _mapStreamHolder[clazz] = it
+            val classes = findStreamInterface(stream.javaClass)
+            for (clazz in classes) {
+                val holder = _mapStreamHolder[clazz] ?: StreamHolder(clazz).also {
+                    _mapStreamHolder[clazz] = it
+                }
+                if (holder.add(stream)) {
+                    logMsg { "+++++ (${clazz.name}) -> (${stream}) size:${holder.size}" }
+                }
             }
-            if (holder.add(stream)) {
-                logMsg { "+++++ (${clazz.name}) -> (${stream}) size:${holder.size}" }
-            }
-        }
 
-        return StreamConnection(stream, classes).also {
-            _mapStreamConnection[stream] = it
+            return StreamConnection(stream, classes).also {
+                _mapStreamConnection[stream] = it
+            }
         }
     }
 
     /**
      * 取消注册流对象
      */
-    @Synchronized
     fun unregister(stream: FStream) {
-        val connection = _mapStreamConnection.remove(stream) ?: return
-        val classes = connection.streamClasses
-        for (clazz in classes) {
-            val holder = _mapStreamHolder[clazz] ?: continue
-            if (holder.remove(stream)) {
-                if (holder.size <= 0) {
-                    _mapStreamHolder.remove(clazz)
+        synchronized(this@FStreamManager) {
+            val connection = _mapStreamConnection.remove(stream) ?: return
+            val classes = connection.streamClasses
+            for (clazz in classes) {
+                val holder = _mapStreamHolder[clazz] ?: continue
+                if (holder.remove(stream)) {
+                    if (holder.size <= 0) {
+                        _mapStreamHolder.remove(clazz)
+                    }
+                    logMsg { "----- (${clazz.name}) -> (${stream}) size:${holder.size}" }
                 }
-                logMsg { "----- (${clazz.name}) -> (${stream}) size:${holder.size}" }
             }
         }
     }
