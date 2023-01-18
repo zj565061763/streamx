@@ -11,10 +11,6 @@ import java.util.*
  * 流管理类
  */
 object FStreamManager {
-    @Deprecated("")
-    @JvmStatic
-    val instance by lazy { FStreamManager }
-
     private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = hashMapOf()
     private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = hashMapOf()
 
