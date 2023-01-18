@@ -15,8 +15,8 @@ object FStreamManager {
     @JvmStatic
     val instance by lazy { FStreamManager }
 
-    private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = hashMapOf()
-    private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = hashMapOf()
+    private val _streamHolder: MutableMap<Class<out FStream>, StreamHolder> = hashMapOf()
+    private val _streamConnection: MutableMap<FStream, StreamConnection> = hashMapOf()
 
     @JvmStatic
     var isDebug = false
@@ -26,7 +26,7 @@ object FStreamManager {
      */
     @Synchronized
     fun getConnection(stream: FStream): StreamConnection? {
-        return _mapStreamConnection[stream]
+        return _streamConnection[stream]
     }
 
     /**
@@ -34,13 +34,13 @@ object FStreamManager {
      */
     @Synchronized
     fun register(stream: FStream): StreamConnection {
-        val connection = _mapStreamConnection[stream]
+        val connection = _streamConnection[stream]
         if (connection != null) return connection
 
         val classes = findStreamInterface(stream.javaClass)
         for (clazz in classes) {
-            val holder = _mapStreamHolder[clazz] ?: StreamHolder(clazz).also {
-                _mapStreamHolder[clazz] = it
+            val holder = _streamHolder[clazz] ?: StreamHolder(clazz).also {
+                _streamHolder[clazz] = it
             }
 
             if (holder.add(stream)) {
@@ -49,7 +49,7 @@ object FStreamManager {
         }
 
         return StreamConnection(stream, classes).also {
-            _mapStreamConnection[stream] = it
+            _streamConnection[stream] = it
         }
     }
 
@@ -58,13 +58,13 @@ object FStreamManager {
      */
     @Synchronized
     fun unregister(stream: FStream) {
-        val connection = _mapStreamConnection.remove(stream) ?: return
+        val connection = _streamConnection.remove(stream) ?: return
         val classes = connection.streamClasses
         for (clazz in classes) {
-            val holder = _mapStreamHolder[clazz] ?: continue
+            val holder = _streamHolder[clazz] ?: continue
             if (holder.remove(stream)) {
                 if (holder.size <= 0) {
-                    _mapStreamHolder.remove(clazz)
+                    _streamHolder.remove(clazz)
                 }
                 logMsg { "----- (${clazz.name}) -> (${stream}) size:${holder.size}" }
             }
@@ -128,11 +128,11 @@ object FStreamManager {
 
     @Synchronized
     internal fun getStreams(clazz: Class<out FStream>): Collection<FStream>? {
-        return _mapStreamHolder[clazz]?.toCollection()
+        return _streamHolder[clazz]?.toCollection()
     }
 
     @Synchronized
     internal fun notifyPriorityChanged(priority: Int, stream: FStream, clazz: Class<out FStream>) {
-        _mapStreamHolder[clazz]?.notifyPriorityChanged(priority, stream)
+        _streamHolder[clazz]?.notifyPriorityChanged(priority, stream)
     }
 }
