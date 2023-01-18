@@ -66,24 +66,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
         val listStream = FStreamManager.getStreams(_streamClass)
         if (listStream.isNullOrEmpty()) {
-            // 尝试创建默认流对象
-            val defaultStream = DefaultStreamManager.getStream(_streamClass) ?: return null
-            val result = if (args != null) {
-                method.invoke(defaultStream, *args)
-            } else {
-                method.invoke(defaultStream)
-            }
-            logMsg {
-                buildString {
-                    append("notify default stream")
-                    append(" (${defaultStream})")
-                    if (!isVoid) {
-                        append(" -> (${result})")
-                    }
-                    append(" uuid:${uuid}")
-                }
-            }
-            return result
+            return null
         }
 
         val filterResult = _resultFilter != null && !isVoid
