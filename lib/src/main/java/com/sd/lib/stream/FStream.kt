@@ -67,6 +67,7 @@ interface FStream {
         /**
          * 创建代理对象
          */
+        @Suppress("UNCHECKED_CAST")
         fun <T : FStream> build(clazz: Class<T>): T {
             require(clazz.isInterface) { "clazz must be an interface" }
             require(clazz != FStream::class.java) { "clazz must not be:${FStream::class.java.name}" }
