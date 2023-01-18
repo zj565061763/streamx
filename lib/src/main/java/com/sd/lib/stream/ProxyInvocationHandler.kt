@@ -70,7 +70,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         }
 
         val filterResult = _resultFilter != null && !isVoid
-        val listResult: MutableList<Any?>? = if (filterResult) LinkedList() else null
+        val listResult: MutableList<Any?>? = if (filterResult) ArrayList(listStream.size) else null
 
         var result: Any? = null
         var index = 0
