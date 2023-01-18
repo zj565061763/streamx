@@ -1,14 +1,14 @@
 package com.sd.lib.stream
 
 import android.util.Log
+import java.lang.reflect.Modifier
 import java.lang.reflect.Proxy
 
 /**
  * 查找[clazz]的所有流接口
  */
 internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>> {
-    require(!Proxy.isProxyClass(clazz)) { "class should not be proxy" }
-    require(!clazz.isInterface) { "class should not be an interface" }
+    clazz.requireIsClass()
 
     val collection = HashSet<Class<out FStream>>()
     var current = clazz
@@ -28,6 +28,12 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
 
     check(collection.isNotEmpty()) { "stream interface was not found in $clazz" }
     return collection
+}
+
+private fun Class<*>.requireIsClass() {
+    require(!Proxy.isProxyClass(this)) { "class should not be proxy" }
+    require(!Modifier.isInterface(modifiers)) { "class should not be an interface" }
+    require(!Modifier.isAbstract(modifiers)) { "class should not be abstract" }
 }
 
 internal inline fun logMsg(tag: String = "FStream", block: () -> String) {
