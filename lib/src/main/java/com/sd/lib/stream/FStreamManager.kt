@@ -10,21 +10,11 @@ import java.util.*
 /**
  * 流管理类
  */
-object FStreamManager {
+internal object FStreamManager {
     private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = hashMapOf()
     private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = hashMapOf()
 
-    @JvmStatic
     var isDebug = false
-
-    /**
-     * 返回[stream]的连接对象
-     */
-    fun getConnection(stream: FStream): StreamConnection? {
-        synchronized(this@FStreamManager) {
-            return _mapStreamConnection[stream]
-        }
-    }
 
     /**
      * 注册流对象
@@ -66,6 +56,15 @@ object FStreamManager {
                     logMsg { "----- (${clazz.name}) -> (${stream}) size:${holder.size}" }
                 }
             }
+        }
+    }
+
+    /**
+     * 返回[stream]的连接对象
+     */
+    fun getConnection(stream: FStream): StreamConnection? {
+        synchronized(this@FStreamManager) {
+            return _mapStreamConnection[stream]
         }
     }
 

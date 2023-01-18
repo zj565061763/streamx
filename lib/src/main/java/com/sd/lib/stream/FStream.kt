@@ -2,6 +2,8 @@ package com.sd.lib.stream
 
 import android.app.Activity
 import android.view.View
+import com.sd.lib.stream.binder.ActivityStreamBinder
+import com.sd.lib.stream.binder.ViewStreamBinder
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 
@@ -115,6 +117,67 @@ interface FStream {
     }
 
     companion object {
+        @JvmStatic
+        fun setDebug(debug: Boolean) {
+            FStreamManager.isDebug = debug
+        }
+
+        /**
+         * 注册流对象
+         */
+        @JvmStatic
+        fun register(stream: FStream): StreamConnection {
+            return FStreamManager.register(stream)
+        }
+
+        /**
+         * 取消注册流对象
+         */
+        @JvmStatic
+        fun unregister(stream: FStream) {
+            FStreamManager.unregister(stream)
+        }
+
+        /**
+         * 返回[stream]的连接对象
+         */
+        @JvmStatic
+        fun getConnection(stream: FStream): StreamConnection? {
+            return FStreamManager.getConnection(stream)
+        }
+
+        /**
+         * 把[stream]和[target]绑定，[target]销毁之后自动取消注册
+         * [ActivityStreamBinder]
+         *
+         * @return true-绑定成功或者已绑定  false-绑定失败
+         */
+        @JvmStatic
+        fun bindActivity(stream: FStream, target: Activity): Boolean {
+            return FStreamManager.bindActivity(stream, target)
+        }
+
+        /**
+         * 把[stream]和[target]绑定，自动注册和取消注册
+         * [ViewStreamBinder]
+         *
+         * @return true-绑定成功或者已绑定  false-绑定失败
+         */
+        @JvmStatic
+        fun bindView(stream: FStream, target: View): Boolean {
+            return FStreamManager.bindView(stream, target)
+        }
+
+        /**
+         * 解绑并取消注册
+         *
+         * @return true-解绑成功  false-未绑定过
+         */
+        @JvmStatic
+        fun unbindStream(stream: FStream): Boolean {
+            return FStreamManager.unbindStream(stream)
+        }
+
         /**
          * 创建代理对象
          */
@@ -141,29 +204,29 @@ inline fun <reified T : FStream> fStream(
 }
 
 /**
- * 注册[FStreamManager.register]
+ * [FStream.register]
  */
 fun FStream.registerStream(): StreamConnection {
-    return FStreamManager.register(this)
+    return FStream.register(this)
 }
 
 /**
- * 取消注册[FStreamManager.unregister]
+ * [FStream.unregister]
  */
 fun FStream.unregisterStream() {
-    FStreamManager.unregister(this)
+    FStream.unregister(this)
 }
 
 /**
- * [FStreamManager.bindActivity]
+ * [FStream.bindActivity]
  */
 fun FStream.bindActivity(activity: Activity): Boolean {
     return FStreamManager.bindActivity(this, activity)
 }
 
 /**
- * [FStreamManager.bindView]
+ * [FStream.bindView]
  */
 fun FStream.bindView(view: View): Boolean {
-    return FStreamManager.bindView(this, view)
+    return FStream.bindView(this, view)
 }
