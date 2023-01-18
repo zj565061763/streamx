@@ -91,23 +91,24 @@ object FStreamManager {
 
     private val _mapStreamBinder: MutableMap<FStream, StreamBinder<*>> = WeakHashMap()
 
-    @Synchronized
     private fun <T> bindStreamInternal(stream: FStream, target: T, factory: () -> StreamBinder<T>): Boolean {
-        val oldBinder = _mapStreamBinder[stream]
-        if (oldBinder != null) {
-            if (oldBinder.target === target) {
-                // 已经绑定过了
-                return true
-            } else {
-                // target发生变化，先取消绑定
-                unbindStream(stream)
+        synchronized(this@FStreamManager) {
+            val oldBinder = _mapStreamBinder[stream]
+            if (oldBinder != null) {
+                if (oldBinder.target === target) {
+                    // 已经绑定过了
+                    return true
+                } else {
+                    // target发生变化，先取消绑定
+                    unbindStream(stream)
+                }
             }
-        }
 
-        val binder = factory()
-        return binder.bind().also { success ->
-            if (success) {
-                _mapStreamBinder[stream] = binder
+            val binder = factory()
+            return binder.bind().also { success ->
+                if (success) {
+                    _mapStreamBinder[stream] = binder
+                }
             }
         }
     }
@@ -117,20 +118,23 @@ object FStreamManager {
      *
      * @return true-解绑成功  false-未绑定过
      */
-    @Synchronized
     fun unbindStream(stream: FStream): Boolean {
-        val binder = _mapStreamBinder.remove(stream) ?: return false
-        binder.destroy()
-        return true
+        synchronized(this@FStreamManager) {
+            val binder = _mapStreamBinder.remove(stream) ?: return false
+            binder.destroy()
+            return true
+        }
     }
 
-    @Synchronized
     internal fun getStreams(clazz: Class<out FStream>): Collection<FStream>? {
-        return _mapStreamHolder[clazz]?.toCollection()
+        synchronized(this@FStreamManager) {
+            return _mapStreamHolder[clazz]?.toCollection()
+        }
     }
 
-    @Synchronized
     internal fun notifyPriorityChanged(priority: Int, stream: FStream, clazz: Class<out FStream>) {
-        _mapStreamHolder[clazz]?.notifyPriorityChanged(priority, stream)
+        synchronized(this@FStreamManager) {
+            _mapStreamHolder[clazz]?.notifyPriorityChanged(priority, stream)
+        }
     }
 }
