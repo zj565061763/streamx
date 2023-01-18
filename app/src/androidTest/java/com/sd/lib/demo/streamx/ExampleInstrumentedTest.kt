@@ -59,8 +59,8 @@ class ExampleInstrumentedTest {
         Assert.assertEquals("", builder.toString())
         builder.clear()
 
-        Assert.assertNotNull(stream0.getStreamConnection())
-        Assert.assertNotNull(stream1.getStreamConnection())
+        Assert.assertNull(stream0.getStreamConnection())
+        Assert.assertNull(stream1.getStreamConnection())
     }
 
     @Test
