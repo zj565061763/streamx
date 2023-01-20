@@ -7,6 +7,7 @@ import java.lang.reflect.Proxy
 /**
  * 查找[clazz]的所有流接口
  */
+@Suppress("UNCHECKED_CAST")
 internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>> {
     clazz.requireIsClass()
 
