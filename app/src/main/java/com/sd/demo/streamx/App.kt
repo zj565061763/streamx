@@ -1,4 +1,4 @@
-package com.sd.lib.demo.streamx
+package com.sd.demo.streamx
 
 import android.app.Application
 import com.sd.lib.stream.FStream

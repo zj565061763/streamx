@@ -1,4 +1,4 @@
-package com.sd.lib.demo.streamx
+package com.sd.demo.streamx
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
