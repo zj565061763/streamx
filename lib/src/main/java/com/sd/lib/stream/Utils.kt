@@ -10,7 +10,7 @@ import java.lang.reflect.Proxy
 internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>> {
     clazz.requireIsClass()
 
-    val collection = HashSet<Class<out FStream>>()
+    val collection = hashSetOf<Class<out FStream>>()
     var current = clazz
 
     while (FStream::class.java.isAssignableFrom(current)) {
