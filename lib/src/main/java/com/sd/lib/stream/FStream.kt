@@ -175,7 +175,7 @@ interface FStream {
          * @return true-解绑成功  false-未绑定过
          */
         @JvmStatic
-        fun unbindStream(stream: FStream): Boolean {
+        fun unbind(stream: FStream): Boolean {
             return FStreamManager.unbindStream(stream)
         }
 
