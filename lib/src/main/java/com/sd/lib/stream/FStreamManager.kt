@@ -135,9 +135,9 @@ internal object FStreamManager {
     }
 
     fun notifyPriorityChanged(
-        priority: Int,
         stream: FStream,
         clazz: Class<out FStream>,
+        priority: Int,
     ) {
         synchronized(this@FStreamManager) {
             _mapStreamHolder[clazz]?.notifyPriorityChanged(stream, priority)
