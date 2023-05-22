@@ -67,6 +67,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         args: Array<Any?>?,
         uuid: String?,
     ): Any? {
+        val listStream = FStreamManager.getStreams(_streamClass)
         logMsg {
             buildString {
                 append("notify +++++ $method")
@@ -74,11 +75,10 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                     append(" arg:${Arrays.toString(args)}")
                 }
                 append(" tag:${_tag}")
+                append(" count:${listStream?.size ?: 0}")
                 append(" uuid:${uuid}")
             }
         }
-
-        val listStream = FStreamManager.getStreams(_streamClass)
         if (listStream.isNullOrEmpty()) {
             return null
         }
