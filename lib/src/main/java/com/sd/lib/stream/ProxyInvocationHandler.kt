@@ -104,40 +104,42 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 break
             }
 
-            var itemResult: Any?
-            var itemBreakDispatch: Boolean
+            var itemResult: Any? = null
+            var itemBreakDispatch = false
 
-            connection.getItem(_streamClass).let { item ->
-                synchronized(item) {
-                    item.resetBreakDispatch()
+            if (connection.isConnected) {
+                connection.getItem(_streamClass).let { item ->
+                    synchronized(item) {
+                        item.resetBreakDispatch()
 
-                    // 调用流对象方法
-                    itemResult = if (args != null) {
-                        method.invoke(stream, *args)
-                    } else {
-                        method.invoke(stream)
-                    }
-
-                    itemBreakDispatch = item.shouldBreakDispatch
-                    item.resetBreakDispatch()
-                }
-
-                logMsg {
-                    buildString {
-                        append("notify")
-                        append(" (${index})")
-                        if (!isVoid) {
-                            append(" -> (${itemResult})")
+                        // 调用流对象方法
+                        itemResult = if (args != null) {
+                            method.invoke(stream, *args)
+                        } else {
+                            method.invoke(stream)
                         }
-                        append(" $stream")
-                        append(" break:${itemBreakDispatch}")
-                        append(" uuid:${uuid}")
-                    }
-                }
 
-                result = itemResult.also {
-                    if (filterResult) {
-                        listResult!!.add(it)
+                        itemBreakDispatch = item.shouldBreakDispatch
+                        item.resetBreakDispatch()
+                    }
+
+                    logMsg {
+                        buildString {
+                            append("notify")
+                            append(" (${index})")
+                            if (!isVoid) {
+                                append(" -> (${itemResult})")
+                            }
+                            append(" $stream")
+                            append(" break:${itemBreakDispatch}")
+                            append(" uuid:${uuid}")
+                        }
+                    }
+
+                    result = itemResult.also {
+                        if (filterResult) {
+                            listResult!!.add(it)
+                        }
                     }
                 }
             }
