@@ -38,7 +38,12 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
         val uuid = if (FStreamManager.isDebug) UUID.randomUUID().toString() else ""
         val isVoid = returnType == Void.TYPE || returnType == Void::class.java
-        var result = processMainLogic(isVoid, method, args, uuid)
+        var result = processMainLogic(
+            isVoid = isVoid,
+            method = method,
+            args = args,
+            uuid = uuid,
+        )
 
 
         if (isVoid) {
@@ -56,7 +61,12 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         return result
     }
 
-    private fun processMainLogic(isVoid: Boolean, method: Method, args: Array<Any?>?, uuid: String?): Any? {
+    private fun processMainLogic(
+        isVoid: Boolean,
+        method: Method,
+        args: Array<Any?>?,
+        uuid: String?,
+    ): Any? {
         logMsg {
             buildString {
                 append("notify +++++ $method")
