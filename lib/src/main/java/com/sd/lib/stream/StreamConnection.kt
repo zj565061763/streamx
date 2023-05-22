@@ -15,6 +15,12 @@ class StreamConnection internal constructor(
         get() = _mapItem.keys
 
     /**
+     * 当前连接是否可用
+     */
+    val isConnected: Boolean
+        get() = FStreamManager.getConnection(stream) === this
+
+    /**
      * 返回优先级
      */
     @JvmOverloads
