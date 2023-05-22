@@ -140,7 +140,7 @@ internal object FStreamManager {
         clazz: Class<out FStream>,
     ) {
         synchronized(this@FStreamManager) {
-            _mapStreamHolder[clazz]?.notifyPriorityChanged(priority, stream)
+            _mapStreamHolder[clazz]?.notifyPriorityChanged(stream, priority)
         }
     }
 }

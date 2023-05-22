@@ -61,7 +61,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     /**
      * 通知优先级变化
      */
-    fun notifyPriorityChanged(priority: Int, stream: FStream) {
+    fun notifyPriorityChanged(stream: FStream, priority: Int) {
         if (!_streamHolder.contains(stream)) return
 
         if (priority == 0) {
