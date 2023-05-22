@@ -59,4 +59,11 @@ class MainActivity : AppCompatActivity() {
          */
         _callback2.unregisterStream()
     }
+
+    companion object {
+        init {
+            // 打开调试模式
+            FStream.setDebug(true)
+        }
+    }
 }

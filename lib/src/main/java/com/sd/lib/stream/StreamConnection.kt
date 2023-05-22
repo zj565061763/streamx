@@ -3,10 +3,9 @@ package com.sd.lib.stream
 import java.util.Collections
 
 class StreamConnection internal constructor(
-    stream: FStream,
+    internal val stream: FStream,
     classes: Collection<Class<out FStream>>,
 ) {
-    private val _stream = stream
     private val _mapItem: Map<Class<out FStream>, ConnectionItem>
 
     /**
@@ -65,7 +64,7 @@ class StreamConnection internal constructor(
             object : ConnectionItem() {
                 override fun onPriorityChanged(priority: Int) {
                     FStreamManager.notifyPriorityChanged(
-                        stream = _stream,
+                        connection = this@StreamConnection,
                         clazz = item,
                         priority = priority,
                     )

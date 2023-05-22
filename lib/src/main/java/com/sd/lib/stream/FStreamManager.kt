@@ -135,12 +135,15 @@ internal object FStreamManager {
     }
 
     fun notifyPriorityChanged(
-        stream: FStream,
+        connection: StreamConnection,
         clazz: Class<out FStream>,
         priority: Int,
     ) {
         synchronized(this@FStreamManager) {
-            _mapStreamHolder[clazz]?.notifyPriorityChanged(stream, priority)
+            if (connection === getConnection(connection.stream)) {
+                val holder = _mapStreamHolder[clazz]
+                holder?.notifyPriorityChanged(connection.stream, priority)
+            }
         }
     }
 }
