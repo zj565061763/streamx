@@ -121,24 +121,24 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                     itemBreakDispatch = item.shouldBreakDispatch
                     item.resetBreakDispatch()
                 }
-            }
 
-            logMsg {
-                buildString {
-                    append("notify")
-                    append(" (${index})")
-                    if (!isVoid) {
-                        append(" -> (${itemResult})")
+                logMsg {
+                    buildString {
+                        append("notify")
+                        append(" (${index})")
+                        if (!isVoid) {
+                            append(" -> (${itemResult})")
+                        }
+                        append(" $stream")
+                        append(" break:${itemBreakDispatch}")
+                        append(" uuid:${uuid}")
                     }
-                    append(" $stream")
-                    append(" break:${itemBreakDispatch}")
-                    append(" uuid:${uuid}")
                 }
-            }
 
-            result = itemResult.also {
-                if (filterResult) {
-                    listResult!!.add(it)
+                result = itemResult.also {
+                    if (filterResult) {
+                        listResult!!.add(it)
+                    }
                 }
             }
 
