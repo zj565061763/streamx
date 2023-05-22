@@ -11,7 +11,7 @@ import java.lang.reflect.Proxy
 internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>> {
     clazz.requireIsClass()
 
-    val collection = hashSetOf<Class<out FStream>>()
+    val collection: MutableSet<Class<out FStream>> = hashSetOf()
     var current: Class<*> = clazz
 
     while (FStream::class.java.isAssignableFrom(current)) {
@@ -28,7 +28,6 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
         current = current.superclass ?: break
     }
 
-    if (collection.isEmpty()) error("stream interface was not found in $clazz")
     return collection
 }
 
