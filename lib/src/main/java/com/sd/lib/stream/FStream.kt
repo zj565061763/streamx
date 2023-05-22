@@ -21,7 +21,7 @@ interface FStream {
     fun getTagForStream(clazz: Class<out FStream>): Any?
 
     class ProxyBuilder {
-        internal var streamClass: Class<out FStream>? = null
+        internal lateinit var streamClass: Class<out FStream>
             private set
 
         internal var tag: Any? = null

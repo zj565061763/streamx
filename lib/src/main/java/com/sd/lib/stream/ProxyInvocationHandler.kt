@@ -1,9 +1,13 @@
 package com.sd.lib.stream
 
-import com.sd.lib.stream.FStream.*
+import com.sd.lib.stream.FStream.AfterDispatchCallback
+import com.sd.lib.stream.FStream.BeforeDispatchCallback
+import com.sd.lib.stream.FStream.ProxyBuilder
+import com.sd.lib.stream.FStream.ResultFilter
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
-import java.util.*
+import java.util.Arrays
+import java.util.UUID
 
 internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler {
     private val _streamClass: Class<out FStream>
@@ -13,7 +17,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
     private val _resultFilter: ResultFilter?
 
     init {
-        _streamClass = requireNotNull(builder.streamClass)
+        _streamClass = builder.streamClass
         _tag = builder.tag
         _beforeDispatchCallback = builder.beforeDispatchCallback
         _afterDispatchCallback = builder.afterDispatchCallback
