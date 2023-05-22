@@ -28,7 +28,7 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
         current = current.superclass ?: break
     }
 
-    check(collection.isNotEmpty()) { "stream interface was not found in $clazz" }
+    if (collection.isEmpty()) error("stream interface was not found in $clazz")
     return collection
 }
 
