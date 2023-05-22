@@ -12,7 +12,7 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
     clazz.requireIsClass()
 
     val collection = hashSetOf<Class<out FStream>>()
-    var current = clazz
+    var current: Class<*> = clazz
 
     while (FStream::class.java.isAssignableFrom(current)) {
         val interfaces = current.interfaces
