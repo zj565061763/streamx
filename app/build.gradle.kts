@@ -5,15 +5,22 @@ plugins {
 
 android {
     namespace = "com.sd.demo.streamx"
-    compileSdk = 33
+    compileSdk = libs.versions.androidCompileSdk.get().toInt()
     defaultConfig {
+        minSdk = libs.versions.androidMinSdk.get().toInt()
+        targetSdk = libs.versions.androidTargetSdk.get().toInt()
         applicationId = "com.sd.demo.service"
-        minSdk = 21
-        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {
@@ -22,21 +29,22 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-    buildFeatures {
-        viewBinding = true
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.6.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(libs.androidx.appcompat)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
     implementation(project(":lib"))
 }

@@ -22,7 +22,7 @@ class TestFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return Button(context).apply {
-            this.text = "点击"
+            this.text = "click"
             this.setOnClickListener {
                 text = _callback.getDisplayContent()
             }
