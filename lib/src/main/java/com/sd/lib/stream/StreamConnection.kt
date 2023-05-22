@@ -52,7 +52,7 @@ class StreamConnection internal constructor(
     }
 
     internal fun getItem(clazz: Class<out FStream>): ConnectionItem {
-        return _mapItem[clazz]!!
+        return checkNotNull(_mapItem[clazz])
     }
 
     private fun getSingleItem(): ConnectionItem {
