@@ -128,13 +128,13 @@ internal object FStreamManager {
         }
     }
 
-    internal fun getStreams(clazz: Class<out FStream>): Collection<FStream>? {
+    fun getStreams(clazz: Class<out FStream>): Collection<FStream>? {
         synchronized(this@FStreamManager) {
             return _mapStreamHolder[clazz]?.toCollection()
         }
     }
 
-    internal fun notifyPriorityChanged(priority: Int, stream: FStream, clazz: Class<out FStream>) {
+    fun notifyPriorityChanged(priority: Int, stream: FStream, clazz: Class<out FStream>) {
         synchronized(this@FStreamManager) {
             _mapStreamHolder[clazz]?.notifyPriorityChanged(priority, stream)
         }
