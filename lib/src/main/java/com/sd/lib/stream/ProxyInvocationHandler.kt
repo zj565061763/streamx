@@ -105,7 +105,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             }
 
             var itemResult: Any?
-            var shouldBreakDispatch: Boolean
+            var itemBreakDispatch: Boolean
 
             connection.getItem(_streamClass).let { item ->
                 synchronized(item) {
@@ -118,7 +118,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                         method.invoke(stream)
                     }
 
-                    shouldBreakDispatch = item.shouldBreakDispatch
+                    itemBreakDispatch = item.shouldBreakDispatch
                     item.resetBreakDispatch()
                 }
             }
@@ -131,7 +131,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                         append(" -> (${itemResult})")
                     }
                     append(" $stream")
-                    append(" break:${shouldBreakDispatch}")
+                    append(" break:${itemBreakDispatch}")
                     append(" uuid:${uuid}")
                 }
             }
@@ -147,7 +147,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 break
             }
 
-            if (shouldBreakDispatch) {
+            if (itemBreakDispatch) {
                 break
             }
 
