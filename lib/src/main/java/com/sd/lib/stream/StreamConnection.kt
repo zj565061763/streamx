@@ -1,6 +1,6 @@
 package com.sd.lib.stream
 
-import java.util.*
+import java.util.Collections
 
 class StreamConnection internal constructor(
     stream: FStream,

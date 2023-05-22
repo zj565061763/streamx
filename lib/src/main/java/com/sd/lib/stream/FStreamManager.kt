@@ -5,7 +5,7 @@ import android.view.View
 import com.sd.lib.stream.binder.ActivityStreamBinder
 import com.sd.lib.stream.binder.StreamBinder
 import com.sd.lib.stream.binder.ViewStreamBinder
-import java.util.*
+import java.util.WeakHashMap
 
 /**
  * 流管理类
