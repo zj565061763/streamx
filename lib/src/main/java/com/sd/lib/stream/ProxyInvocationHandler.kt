@@ -142,6 +142,8 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                         }
                     }
                 }
+            } else {
+                logMsg { "connection is disconnected $stream uuid:${uuid}" }
             }
 
             if (_afterDispatchCallback?.dispatch(stream, method, args, itemResult) == true) {
