@@ -37,11 +37,8 @@ private fun Class<*>.requireIsClass() {
     require(!Modifier.isAbstract(modifiers)) { "class should not be abstract" }
 }
 
-internal inline fun logMsg(
-    tag: String = "FStream",
-    block: () -> String,
-) {
+internal inline fun logMsg(block: () -> String) {
     if (FStreamManager.isDebug) {
-        Log.i(tag, block())
+        Log.i("FStream", block())
     }
 }
