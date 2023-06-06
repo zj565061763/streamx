@@ -1,7 +1,8 @@
-package com.sd.demo.streamx
+package com.sd.demo.stream
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.sd.demo.stream.R
 import com.sd.lib.stream.FStream
 import com.sd.lib.stream.bindActivity
 import com.sd.lib.stream.registerStream

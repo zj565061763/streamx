@@ -1,4 +1,4 @@
-package com.sd.demo.streamx
+package com.sd.demo.stream
 
 import android.os.Bundle
 import android.view.LayoutInflater

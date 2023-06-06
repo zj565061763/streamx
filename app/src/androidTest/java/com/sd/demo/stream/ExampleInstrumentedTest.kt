@@ -1,8 +1,8 @@
-package com.sd.demo.streamx
+package com.sd.demo.stream
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sd.demo.streamx.utils.TestBuildStream
-import com.sd.demo.streamx.utils.TestStream
+import com.sd.demo.stream.utils.TestBuildStream
+import com.sd.demo.stream.utils.TestStream
 import com.sd.lib.stream.*
 import org.junit.Assert
 import org.junit.Test

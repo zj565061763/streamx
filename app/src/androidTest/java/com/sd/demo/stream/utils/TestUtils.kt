@@ -1,4 +1,4 @@
-package com.sd.demo.streamx.utils
+package com.sd.demo.stream.utils
 
 import com.sd.lib.stream.FStream
 

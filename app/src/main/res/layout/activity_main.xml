@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        class="com.sd.demo.streamx.TestFragment"
+        class="com.sd.demo.stream.TestFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

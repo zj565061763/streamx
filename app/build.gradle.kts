@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "com.sd.demo.streamx"
+    namespace = "com.sd.demo.stream"
     compileSdk = libs.versions.androidCompileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.androidMinSdk.get().toInt()
         targetSdk = libs.versions.androidTargetSdk.get().toInt()
-        applicationId = "com.sd.demo.service"
+        applicationId = "com.sd.demo.stream"
         versionCode = 1
         versionName = "1.0"
 
