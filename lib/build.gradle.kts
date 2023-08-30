@@ -6,7 +6,7 @@ plugins {
 
 val libGroupId = "com.sd.lib.android"
 val libArtifactId = "streamx"
-val libVersionName = "1.0.0-rc07"
+val libVersionName = "1.0.0"
 
 android {
     namespace = "com.sd.lib.stream"
