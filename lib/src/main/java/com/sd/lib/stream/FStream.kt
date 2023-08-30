@@ -229,7 +229,7 @@ fun FStream.getStreamConnection(): StreamConnection? {
  * [FStream.bindActivity]
  */
 fun FStream.bindActivity(activity: Activity): Boolean {
-    return FStreamManager.bindActivity(this, activity)
+    return FStream.bindActivity(this, activity)
 }
 
 /**
