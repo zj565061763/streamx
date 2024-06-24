@@ -19,7 +19,7 @@ interface FStream {
      *
      * @param clazz 哪个接口的代理对象方法被触发
      */
-    fun getTagForStream(clazz: Class<out FStream>): Any?
+    fun getTagForStream(clazz: Class<out FStream>): Any? = null
 
     class ProxyBuilder {
         internal lateinit var streamClass: Class<out FStream>

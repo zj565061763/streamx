@@ -2,7 +2,6 @@ package com.sd.demo.stream
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.sd.demo.stream.R
 import com.sd.lib.stream.FStream
 import com.sd.lib.stream.bindActivity
 import com.sd.lib.stream.registerStream
@@ -27,29 +26,17 @@ class MainActivity : AppCompatActivity() {
         override fun getDisplayContent(): String {
             return "1"
         }
-
-        override fun getTagForStream(clazz: Class<out FStream?>): Any? {
-            return null
-        }
     }
 
     private val _callback2 = object : TestFragment.FragmentCallback {
         override fun getDisplayContent(): String {
             return "2"
         }
-
-        override fun getTagForStream(clazz: Class<out FStream?>): Any? {
-            return null
-        }
     }
 
     private val _callback3 = object : TestFragment.FragmentCallback {
         override fun getDisplayContent(): String {
             return "3"
-        }
-
-        override fun getTagForStream(clazz: Class<out FStream?>): Any? {
-            return null
         }
     }
 

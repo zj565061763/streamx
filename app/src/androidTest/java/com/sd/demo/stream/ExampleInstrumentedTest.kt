@@ -21,18 +21,10 @@ class ExampleInstrumentedTest {
             override fun build(builder: StringBuilder) {
                 builder.append(0)
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream1 = object : TestBuildStream {
             override fun build(builder: StringBuilder) {
                 builder.append(1)
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
             }
         }
 
@@ -73,29 +65,17 @@ class ExampleInstrumentedTest {
                 unregisterStream()
                 return "0"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "1"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "2"
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
             }
         }
 
@@ -123,10 +103,6 @@ class ExampleInstrumentedTest {
             override fun build(builder: StringBuilder) {
                 builder.append(1)
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
 
         stream0.registerStream()
@@ -150,27 +126,15 @@ class ExampleInstrumentedTest {
             override fun build(builder: StringBuilder) {
                 builder.append(0)
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream1 = object : TestBuildStream {
             override fun build(builder: StringBuilder) {
                 builder.append(1)
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream2 = object : TestBuildStream {
             override fun build(builder: StringBuilder) {
                 builder.append(2)
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
             }
         }
         stream0.registerStream().setPriority(-1)
@@ -199,29 +163,17 @@ class ExampleInstrumentedTest {
                 Assert.assertEquals("http", url)
                 return "0"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "1"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "2"
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
             }
         }
 
@@ -250,29 +202,17 @@ class ExampleInstrumentedTest {
                 Assert.assertEquals("http", url)
                 return "0"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "1"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "2"
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
             }
         }
 
@@ -301,29 +241,17 @@ class ExampleInstrumentedTest {
                 Assert.assertEquals("http", url)
                 return "0"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "1"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "2"
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
             }
         }
 
@@ -356,10 +284,6 @@ class ExampleInstrumentedTest {
                 Assert.assertEquals("http", url)
                 return "0"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream1 = object : TestStream {
             override fun getContent(url: String): String {
@@ -367,19 +291,11 @@ class ExampleInstrumentedTest {
                 getStreamConnection()!!.breakDispatch()
                 return "1"
             }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
-            }
         }
         val stream2 = object : TestStream {
             override fun getContent(url: String): String {
                 Assert.assertEquals("http", url)
                 return "2"
-            }
-
-            override fun getTagForStream(clazz: Class<out FStream>): Any? {
-                return null
             }
         }
 
