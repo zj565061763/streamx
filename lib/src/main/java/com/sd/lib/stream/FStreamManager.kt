@@ -11,8 +11,8 @@ import java.util.WeakHashMap
  * 流管理类
  */
 internal object FStreamManager {
-    private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = mutableMapOf()
-    private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = mutableMapOf()
+    private val _typedStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = mutableMapOf()
+    private val _streamConnections: MutableMap<FStream, StreamConnection> = mutableMapOf()
 
     var isDebug = false
 
@@ -21,7 +21,7 @@ internal object FStreamManager {
      */
     fun register(stream: FStream): StreamConnection {
         synchronized(this@FStreamManager) {
-            val connection = _mapStreamConnection[stream]
+            val connection = _streamConnections[stream]
             if (connection != null) return connection
 
             val classes = findStreamInterface(stream.javaClass).also {
@@ -29,14 +29,14 @@ internal object FStreamManager {
             }
 
             for (clazz in classes) {
-                val holder = _mapStreamHolder.getOrPut(clazz) { StreamHolder(clazz) }
+                val holder = _typedStreamHolder.getOrPut(clazz) { StreamHolder(clazz) }
                 if (holder.add(stream)) {
                     logMsg { "+++++ (${clazz.name}) -> (${stream}) size:${holder.size}" }
                 }
             }
 
             return StreamConnection(stream, classes).also {
-                _mapStreamConnection[stream] = it
+                _streamConnections[stream] = it
             }
         }
     }
@@ -46,13 +46,13 @@ internal object FStreamManager {
      */
     fun unregister(stream: FStream) {
         synchronized(this@FStreamManager) {
-            val connection = _mapStreamConnection.remove(stream) ?: return
+            val connection = _streamConnections.remove(stream) ?: return
             val classes = connection.streamClasses
             for (clazz in classes) {
-                val holder = _mapStreamHolder[clazz] ?: continue
+                val holder = _typedStreamHolder[clazz] ?: continue
                 if (holder.remove(stream)) {
                     if (holder.size <= 0) {
-                        _mapStreamHolder.remove(clazz)
+                        _typedStreamHolder.remove(clazz)
                     }
                     logMsg { "----- (${clazz.name}) -> (${stream}) size:${holder.size}" }
                 }
@@ -65,7 +65,7 @@ internal object FStreamManager {
      */
     fun getConnection(stream: FStream): StreamConnection? {
         synchronized(this@FStreamManager) {
-            return _mapStreamConnection[stream]
+            return _streamConnections[stream]
         }
     }
 
@@ -128,7 +128,7 @@ internal object FStreamManager {
 
     fun getStreams(clazz: Class<out FStream>): Collection<FStream>? {
         synchronized(this@FStreamManager) {
-            return _mapStreamHolder[clazz]?.toCollection()
+            return _typedStreamHolder[clazz]?.toCollection()
         }
     }
 
@@ -139,7 +139,7 @@ internal object FStreamManager {
     ) {
         synchronized(this@FStreamManager) {
             if (connection.isConnected) {
-                val holder = _mapStreamHolder[clazz]
+                val holder = _typedStreamHolder[clazz]
                 holder?.notifyPriorityChanged(connection.stream, priority)
             }
         }
