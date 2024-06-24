@@ -6,13 +6,14 @@ plugins {
 
 val libGroupId = "com.sd.lib.android"
 val libArtifactId = "streamx"
-val libVersionName = "1.0.0"
+val libVersion = "1.0.0"
 
 android {
     namespace = "com.sd.lib.stream"
     compileSdk = libs.versions.androidCompileSdk.get().toInt()
     defaultConfig {
-        minSdk = libs.versions.androidMinSdk.get().toInt()
+        minSdk = 21
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     kotlinOptions {
@@ -33,14 +34,15 @@ kotlin {
 dependencies {
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = libGroupId
+            artifactId = libArtifactId
+            version = libVersion
+
+            afterEvaluate {
                 from(components["release"])
-                groupId = libGroupId
-                artifactId = libArtifactId
-                version = libVersionName
             }
         }
     }
