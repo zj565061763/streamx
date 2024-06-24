@@ -19,7 +19,8 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private var _isNeedSort = false
 
     /** 流对象数量 */
-    val size get() = _streamHolder.size
+    val size: Int
+        get() = _streamHolder.size
 
     /**
      * 添加流对象

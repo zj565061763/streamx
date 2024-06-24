@@ -74,7 +74,7 @@ internal object FStreamManager {
         priority: Int,
     ) {
         synchronized(FStreamManager) {
-            if (connection.isConnected) {
+            if (connection.isConnected()) {
                 val holder = _typedStreamHolder[clazz]
                 holder?.notifyPriorityChanged(connection.stream, priority)
             }

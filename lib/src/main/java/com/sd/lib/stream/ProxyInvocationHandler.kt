@@ -107,7 +107,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             var itemResult: Any? = null
             var itemBreakDispatch = false
 
-            if (connection.isConnected) {
+            if (connection.isConnected()) {
                 connection.getItem(_streamClass).let { item ->
                     synchronized(item) {
                         item.resetBreakDispatch()
