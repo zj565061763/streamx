@@ -29,9 +29,7 @@ internal object FStreamManager {
             }
 
             for (clazz in classes) {
-                val holder = _mapStreamHolder[clazz] ?: StreamHolder(clazz).also {
-                    _mapStreamHolder[clazz] = it
-                }
+                val holder = _mapStreamHolder.getOrPut(clazz) { StreamHolder(clazz) }
                 if (holder.add(stream)) {
                     logMsg { "+++++ (${clazz.name}) -> (${stream}) size:${holder.size}" }
                 }
