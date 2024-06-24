@@ -13,7 +13,7 @@ internal class StreamHolder(clazz: Class<out FStream>) {
     private val _streamHolder: MutableList<FStream> = CopyOnWriteArrayList()
 
     /** 设置了优先级的流对象  */
-    private val _priorityStreamHolder: MutableSet<FStream> = hashSetOf()
+    private val _priorityStreamHolder: MutableSet<FStream> = mutableSetOf()
 
     /** 是否需要排序  */
     private var _isNeedSort = false
