@@ -3,6 +3,7 @@ package com.sd.lib.stream
 import android.app.Activity
 import android.view.View
 import com.sd.lib.stream.binder.ActivityStreamBinder
+import com.sd.lib.stream.binder.FStreamBinder
 import com.sd.lib.stream.binder.ViewStreamBinder
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
@@ -155,7 +156,7 @@ interface FStream {
          */
         @JvmStatic
         fun bindActivity(stream: FStream, target: Activity): Boolean {
-            return FStreamManager.bindActivity(stream, target)
+            return FStreamBinder.bindActivity(stream, target)
         }
 
         /**
@@ -166,7 +167,7 @@ interface FStream {
          */
         @JvmStatic
         fun bindView(stream: FStream, target: View): Boolean {
-            return FStreamManager.bindView(stream, target)
+            return FStreamBinder.bindView(stream, target)
         }
 
         /**
@@ -176,7 +177,7 @@ interface FStream {
          */
         @JvmStatic
         fun unbind(stream: FStream): Boolean {
-            return FStreamManager.unbindStream(stream)
+            return FStreamBinder.unbindStream(stream)
         }
 
         /**

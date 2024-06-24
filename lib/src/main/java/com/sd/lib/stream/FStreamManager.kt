@@ -1,12 +1,5 @@
 package com.sd.lib.stream
 
-import android.app.Activity
-import android.view.View
-import com.sd.lib.stream.binder.ActivityStreamBinder
-import com.sd.lib.stream.binder.StreamBinder
-import com.sd.lib.stream.binder.ViewStreamBinder
-import java.util.WeakHashMap
-
 /**
  * 流管理类
  */
@@ -20,7 +13,7 @@ internal object FStreamManager {
      * 注册流对象
      */
     fun register(stream: FStream): StreamConnection {
-        synchronized(this@FStreamManager) {
+        synchronized(FStreamManager) {
             val connection = _streamConnections[stream]
             if (connection != null) return connection
 
@@ -45,7 +38,7 @@ internal object FStreamManager {
      * 取消注册流对象
      */
     fun unregister(stream: FStream) {
-        synchronized(this@FStreamManager) {
+        synchronized(FStreamManager) {
             val connection = _streamConnections.remove(stream) ?: return
             val classes = connection.streamClasses
             for (clazz in classes) {
@@ -64,70 +57,13 @@ internal object FStreamManager {
      * 返回[stream]的连接对象
      */
     fun getConnection(stream: FStream): StreamConnection? {
-        synchronized(this@FStreamManager) {
+        synchronized(FStreamManager) {
             return _streamConnections[stream]
         }
     }
 
-    /**
-     * 把[stream]和[target]绑定，[target]销毁之后自动取消注册
-     * [ActivityStreamBinder]
-     *
-     * @return true-绑定成功或者已绑定  false-绑定失败
-     */
-    fun bindActivity(stream: FStream, target: Activity): Boolean {
-        return bindStreamInternal(stream, target) { ActivityStreamBinder(stream, target) }
-    }
-
-    /**
-     * 把[stream]和[target]绑定，自动注册和取消注册
-     * [ViewStreamBinder]
-     *
-     * @return true-绑定成功或者已绑定  false-绑定失败
-     */
-    fun bindView(stream: FStream, target: View): Boolean {
-        return bindStreamInternal(stream, target) { ViewStreamBinder(stream, target) }
-    }
-
-    private val _mapStreamBinder: MutableMap<FStream, StreamBinder<*>> = WeakHashMap()
-
-    private fun <T> bindStreamInternal(stream: FStream, target: T, factory: () -> StreamBinder<T>): Boolean {
-        synchronized(this@FStreamManager) {
-            val oldBinder = _mapStreamBinder[stream]
-            if (oldBinder != null) {
-                if (oldBinder.getTarget() === target) {
-                    // 已经绑定过了
-                    return true
-                } else {
-                    // target发生变化，先取消绑定
-                    unbindStream(stream)
-                }
-            }
-
-            val binder = factory()
-            return binder.bind().also { success ->
-                if (success) {
-                    _mapStreamBinder[stream] = binder
-                }
-            }
-        }
-    }
-
-    /**
-     * 解绑并取消注册
-     *
-     * @return true-解绑成功  false-未绑定过
-     */
-    fun unbindStream(stream: FStream): Boolean {
-        synchronized(this@FStreamManager) {
-            val binder = _mapStreamBinder.remove(stream) ?: return false
-            binder.destroy()
-            return true
-        }
-    }
-
     fun getStreams(clazz: Class<out FStream>): Collection<FStream>? {
-        synchronized(this@FStreamManager) {
+        synchronized(FStreamManager) {
             return _typedStreamHolder[clazz]?.toCollection()
         }
     }
@@ -137,7 +73,7 @@ internal object FStreamManager {
         clazz: Class<out FStream>,
         priority: Int,
     ) {
-        synchronized(this@FStreamManager) {
+        synchronized(FStreamManager) {
             if (connection.isConnected) {
                 val holder = _typedStreamHolder[clazz]
                 holder?.notifyPriorityChanged(connection.stream, priority)
