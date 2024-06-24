@@ -28,10 +28,10 @@ interface FStream {
         internal var tag: Any? = null
             private set
 
-        internal var beforeDispatchCallback: BeforeDispatchCallback? = null
+        internal var beforeDispatch: BeforeDispatch? = null
             private set
 
-        internal var afterDispatchCallback: AfterDispatchCallback? = null
+        internal var afterDispatch: AfterDispatch? = null
             private set
 
         internal var resultFilter: ResultFilter? = null
@@ -47,15 +47,15 @@ interface FStream {
         /**
          * 设置流对象方法被通知之前回调
          */
-        fun setBeforeDispatchCallback(callback: BeforeDispatchCallback?) = apply {
-            this.beforeDispatchCallback = callback
+        fun setBeforeDispatch(callback: BeforeDispatch?) = apply {
+            this.beforeDispatch = callback
         }
 
         /**
          * 设置流对象方法被通知之后回调
          */
-        fun setAfterDispatchCallback(callback: AfterDispatchCallback?) = apply {
-            this.afterDispatchCallback = callback
+        fun setAfterDispatch(callback: AfterDispatch?) = apply {
+            this.afterDispatch = callback
         }
 
         /**
@@ -81,7 +81,7 @@ interface FStream {
         }
     }
 
-    fun interface BeforeDispatchCallback {
+    fun interface BeforeDispatch {
         /**
          * 流对象方法被通知之前触发
          *
@@ -93,7 +93,7 @@ interface FStream {
         fun dispatch(stream: FStream, method: Method, methodParams: Array<Any?>?): Boolean
     }
 
-    fun interface AfterDispatchCallback {
+    fun interface AfterDispatch {
         /**
          * 流对象方法被通知之后触发
          *

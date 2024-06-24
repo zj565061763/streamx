@@ -1,7 +1,7 @@
 package com.sd.lib.stream
 
-import com.sd.lib.stream.FStream.AfterDispatchCallback
-import com.sd.lib.stream.FStream.BeforeDispatchCallback
+import com.sd.lib.stream.FStream.AfterDispatch
+import com.sd.lib.stream.FStream.BeforeDispatch
 import com.sd.lib.stream.FStream.ProxyBuilder
 import com.sd.lib.stream.FStream.ResultFilter
 import java.lang.reflect.InvocationHandler
@@ -11,8 +11,8 @@ import java.util.UUID
 internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler {
     private val _streamClass: Class<out FStream> = builder.streamClass
     private val _tag: Any? = builder.tag
-    private val _beforeDispatchCallback: BeforeDispatchCallback? = builder.beforeDispatchCallback
-    private val _afterDispatchCallback: AfterDispatchCallback? = builder.afterDispatchCallback
+    private val _beforeDispatch: BeforeDispatch? = builder.beforeDispatch
+    private val _afterDispatch: AfterDispatch? = builder.afterDispatch
     private val _resultFilter: ResultFilter? = builder.resultFilter
 
     override fun invoke(proxy: Any, method: Method, args: Array<Any?>?): Any? {
@@ -89,7 +89,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 continue
             }
 
-            if (_beforeDispatchCallback?.dispatch(stream, method, args) == true) {
+            if (_beforeDispatch?.dispatch(stream, method, args) == true) {
                 logMsg { "dispatch broken before uuid:${uuid}" }
                 break
             }
@@ -136,7 +136,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 logMsg { "connection is disconnected $stream uuid:${uuid}" }
             }
 
-            if (_afterDispatchCallback?.dispatch(stream, method, args, itemResult) == true) {
+            if (_afterDispatch?.dispatch(stream, method, args, itemResult) == true) {
                 logMsg { "dispatch broken after uuid:${uuid}" }
                 break
             }

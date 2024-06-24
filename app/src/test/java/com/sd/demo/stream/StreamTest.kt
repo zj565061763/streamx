@@ -153,7 +153,7 @@ class StreamTest {
     }
 
     @Test
-    fun testBeforeDispatchCallback() {
+    fun testBeforeDispatch() {
         val stream0 = object : TestStream {
             override fun getContent(url: String): String {
                 assertEquals("http", url)
@@ -178,7 +178,7 @@ class StreamTest {
         stream2.registerStream()
 
         val proxy = fStreamProxy<TestStream> {
-            setBeforeDispatchCallback { _, _, _ ->
+            setBeforeDispatch { _, _, _ ->
                 true
             }
         }
@@ -192,7 +192,7 @@ class StreamTest {
     }
 
     @Test
-    fun testAfterDispatchCallback() {
+    fun testAfterDispatch() {
         val stream0 = object : TestStream {
             override fun getContent(url: String): String {
                 assertEquals("http", url)
@@ -217,7 +217,7 @@ class StreamTest {
         stream2.registerStream()
 
         val proxy = fStreamProxy<TestStream> {
-            setAfterDispatchCallback { _, _, _, methodResult ->
+            setAfterDispatch { _, _, _, methodResult ->
                 "1" == methodResult
             }
         }
