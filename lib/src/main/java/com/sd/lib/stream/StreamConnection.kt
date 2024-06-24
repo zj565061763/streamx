@@ -57,7 +57,7 @@ class StreamConnection internal constructor(
     }
 
     internal fun getItem(clazz: Class<out FStream>): ConnectionItem {
-        return checkNotNull(_mapItem[clazz])
+        return checkNotNull(_mapItem[clazz]) { "class:${clazz.name} was not found in $stream" }
     }
 
     private fun getSingleItem(): ConnectionItem {
