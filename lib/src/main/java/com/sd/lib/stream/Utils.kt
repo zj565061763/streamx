@@ -17,7 +17,7 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
         require(!Modifier.isAbstract(modifiers)) { "class should not be abstract" }
     }
 
-    val collection: MutableSet<Class<out FStream>> = hashSetOf()
+    val collection: MutableSet<Class<out FStream>> = mutableSetOf()
     var current: Class<*> = clazz
 
     while (FStream::class.java.isAssignableFrom(current)) {
