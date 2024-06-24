@@ -1,5 +1,8 @@
 package com.sd.lib.stream
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.util.Log
 import java.lang.reflect.Modifier
 import java.lang.reflect.Proxy
@@ -36,6 +39,15 @@ private fun Class<*>.requireIsClass() {
     require(!Modifier.isInterface(modifiers)) { "class should not be an interface" }
     require(!Modifier.isAbstract(modifiers)) { "class should not be abstract" }
 }
+
+internal fun Context.fPreferActivityContext(): Context = fFindActivityOrNull() ?: this
+
+private tailrec fun Context.fFindActivityOrNull(): Activity? =
+    when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.fFindActivityOrNull()
+        else -> null
+    }
 
 internal inline fun logMsg(block: () -> String) {
     if (FStreamManager.isDebug) {
