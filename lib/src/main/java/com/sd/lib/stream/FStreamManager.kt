@@ -11,8 +11,8 @@ import java.util.WeakHashMap
  * 流管理类
  */
 internal object FStreamManager {
-    private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = hashMapOf()
-    private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = hashMapOf()
+    private val _mapStreamHolder: MutableMap<Class<out FStream>, StreamHolder> = mutableMapOf()
+    private val _mapStreamConnection: MutableMap<FStream, StreamConnection> = mutableMapOf()
 
     var isDebug = false
 
