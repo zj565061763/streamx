@@ -10,9 +10,12 @@ import java.lang.reflect.Proxy
 /**
  * 查找[clazz]的所有流接口
  */
-@Suppress("UNCHECKED_CAST")
 internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>> {
-    clazz.requireIsClass()
+    require(!Proxy.isProxyClass(clazz)) { "class should not be proxy" }
+    clazz.modifiers.let { modifiers ->
+        require(!Modifier.isInterface(modifiers)) { "class should not be an interface" }
+        require(!Modifier.isAbstract(modifiers)) { "class should not be abstract" }
+    }
 
     val collection: MutableSet<Class<out FStream>> = hashSetOf()
     var current: Class<*> = clazz
@@ -24,6 +27,7 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
         for (item in interfaces) {
             if (FStream::class.java == item) continue
             if (FStream::class.java.isAssignableFrom(item)) {
+                @Suppress("UNCHECKED_CAST")
                 collection.add(item as Class<out FStream>)
             }
         }
@@ -32,12 +36,6 @@ internal fun findStreamInterface(clazz: Class<*>): Collection<Class<out FStream>
     }
 
     return collection
-}
-
-private fun Class<*>.requireIsClass() {
-    require(!Proxy.isProxyClass(this)) { "class should not be proxy" }
-    require(!Modifier.isInterface(modifiers)) { "class should not be an interface" }
-    require(!Modifier.isAbstract(modifiers)) { "class should not be abstract" }
 }
 
 internal fun Context.fPreferActivityContext(): Context = fFindActivityOrNull() ?: this
