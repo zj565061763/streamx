@@ -3,11 +3,10 @@ package com.sd.lib.stream.binder
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.view.Window
 import com.sd.lib.stream.FStream
 
 /**
- * 将流对象和[Activity]绑定，在[Window.getDecorView]被移除的时候取消注册
+ * 把流对象和[Activity]绑定，在[Activity]销毁时，取消注册流对象
  */
 internal class ActivityStreamBinder(
     stream: FStream,
