@@ -20,17 +20,14 @@ internal class ViewStreamBinder(
             return false
         }
 
-        val listenerTask = Runnable {
-            target.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
-            target.addOnAttachStateChangeListener(_onAttachStateChangeListener)
-        }
-
         return if (target.isAttachedToWindow) {
             registerStream().also { register ->
-                if (register) listenerTask.run()
+                if (register) {
+                    target.addOnAttachStateChangeListener(_onAttachStateChangeListener)
+                }
             }
         } else {
-            listenerTask.run()
+            target.addOnAttachStateChangeListener(_onAttachStateChangeListener)
             true
         }
     }
