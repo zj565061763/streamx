@@ -6,23 +6,14 @@ import com.sd.lib.stream.FStream.ProxyBuilder
 import com.sd.lib.stream.FStream.ResultFilter
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
-import java.util.Arrays
 import java.util.UUID
 
 internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler {
-    private val _streamClass: Class<out FStream>
-    private val _tag: Any?
-    private val _beforeDispatchCallback: BeforeDispatchCallback?
-    private val _afterDispatchCallback: AfterDispatchCallback?
-    private val _resultFilter: ResultFilter?
-
-    init {
-        _streamClass = builder.streamClass
-        _tag = builder.tag
-        _beforeDispatchCallback = builder.beforeDispatchCallback
-        _afterDispatchCallback = builder.afterDispatchCallback
-        _resultFilter = builder.resultFilter
-    }
+    private val _streamClass: Class<out FStream> = builder.streamClass
+    private val _tag: Any? = builder.tag
+    private val _beforeDispatchCallback: BeforeDispatchCallback? = builder.beforeDispatchCallback
+    private val _afterDispatchCallback: AfterDispatchCallback? = builder.afterDispatchCallback
+    private val _resultFilter: ResultFilter? = builder.resultFilter
 
     override fun invoke(proxy: Any, method: Method, args: Array<Any?>?): Any? {
         val returnType = method.returnType
@@ -72,7 +63,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
             buildString {
                 append("notify +++++ $method")
                 if (!args.isNullOrEmpty()) {
-                    append(" arg:${Arrays.toString(args)}")
+                    append(" arg:${args.contentToString()}")
                 }
                 append(" tag:${_tag}")
                 append(" count:${listStream?.size ?: 0}")
