@@ -1,8 +1,8 @@
 package com.sd.lib.stream.binder
 
 import android.app.Activity
-import android.view.View
-import android.view.View.OnAttachStateChangeListener
+import android.app.Application
+import android.os.Bundle
 import android.view.Window
 import com.sd.lib.stream.FStream
 
@@ -16,29 +16,42 @@ internal class ActivityStreamBinder(
 
     override fun bindImpl(target: Activity): Boolean {
         if (target.isFinishing) return false
-
-        val decorView = requireNotNull(target.window) {
-            "Bind stream failed because activity's window is null."
-        }.decorView
-
         return registerStream().also { register ->
             if (register) {
-                decorView.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
-                decorView.addOnAttachStateChangeListener(_onAttachStateChangeListener)
+                target.application.registerActivityLifecycleCallbacks(_activityCallbacks)
             }
         }
     }
 
-    private val _onAttachStateChangeListener = object : OnAttachStateChangeListener {
-        override fun onViewAttachedToWindow(v: View) {
+    private val _activityCallbacks = object : Application.ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         }
 
-        override fun onViewDetachedFromWindow(v: View) {
-            destroy()
+        override fun onActivityStarted(activity: Activity) {
+        }
+
+        override fun onActivityResumed(activity: Activity) {
+        }
+
+        override fun onActivityPaused(activity: Activity) {
+        }
+
+        override fun onActivityStopped(activity: Activity) {
+        }
+
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+        }
+
+        override fun onActivityDestroyed(activity: Activity) {
+            val t = getTarget()
+            if (t == null || t === activity) {
+                activity.application.unregisterActivityLifecycleCallbacks(this)
+                destroy()
+            }
         }
     }
 
     override fun onDestroy(target: Activity) {
-        target.window?.decorView?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+        target.application.unregisterActivityLifecycleCallbacks(_activityCallbacks)
     }
 }

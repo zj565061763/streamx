@@ -97,7 +97,7 @@ internal object FStreamManager {
         synchronized(this@FStreamManager) {
             val oldBinder = _mapStreamBinder[stream]
             if (oldBinder != null) {
-                if (oldBinder.target === target) {
+                if (oldBinder.getTarget() === target) {
                     // 已经绑定过了
                     return true
                 } else {

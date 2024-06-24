@@ -11,9 +11,12 @@ internal abstract class StreamBinder<T>(
     private val _streamRef = WeakReference(stream)
     private val _targetRef = WeakReference(target)
 
-    /** 要绑定的目标 */
-    val target: T?
-        get() = _targetRef.get()
+    /**
+     * 要绑定的目标
+     */
+    fun getTarget(): T? {
+        return _targetRef.get()
+    }
 
     /**
      * 绑定
@@ -21,7 +24,7 @@ internal abstract class StreamBinder<T>(
      * @return true-成功  false-失败
      */
     fun bind(): Boolean {
-        val t = target ?: return false
+        val t = _targetRef.get() ?: return false
         return bindImpl(t)
     }
 
@@ -50,8 +53,7 @@ internal abstract class StreamBinder<T>(
     fun destroy() {
         unregisterStream()
         _streamRef.clear()
-
-        target?.let {
+        _targetRef.get()?.let {
             onDestroy(it)
             _targetRef.clear()
         }
