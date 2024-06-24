@@ -40,10 +40,9 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         if (isVoid) {
             result = null
         } else if (returnType.isPrimitive && result == null) {
-            result = if (Boolean::class.javaPrimitiveType == returnType) {
-                false
-            } else {
-                0
+            result = when (returnType) {
+                Boolean::class.javaPrimitiveType -> false
+                else -> 0
             }
             logMsg { "return type:${returnType} but method result is null, so set to $result uuid:${uuid}" }
         }
