@@ -82,18 +82,8 @@ internal abstract class ConnectionItem {
      * 设置优先级
      */
     fun setPriority(priority: Int) {
-        synchronized(this@ConnectionItem) {
-            if (this.priority != priority) {
-                this.priority = priority
-                true
-            } else {
-                false
-            }
-        }.let { changed ->
-            if (changed) {
-                onPriorityChanged(priority)
-            }
-        }
+        this.priority = priority
+        onPriorityChanged(priority)
     }
 
     /**
