@@ -90,11 +90,6 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 continue
             }
 
-            if (!connection.isConnected()) {
-                logMsg { "connection is disconnected $stream uuid:${uuid}" }
-                continue
-            }
-
             if (_beforeDispatch?.dispatch(stream, method, args) == true) {
                 logMsg { "dispatch broken before uuid:${uuid}" }
                 break
