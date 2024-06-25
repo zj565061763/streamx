@@ -272,47 +272,4 @@ class StreamTest {
         stream1.unregisterStream()
         stream2.unregisterStream()
     }
-
-    @Test
-    fun testDispatchBreak() {
-        val stream0 = object : TestStream {
-            override fun getContent(url: String): String {
-                assertEquals("http", url)
-                return "0"
-            }
-        }
-        val stream1 = object : TestStream {
-            override fun getContent(url: String): String {
-                assertEquals("http", url)
-                getStreamConnection()!!.breakDispatch()
-                return "1"
-            }
-        }
-        val stream2 = object : TestStream {
-            override fun getContent(url: String): String {
-                assertEquals("http", url)
-                return "2"
-            }
-        }
-
-        stream0.registerStream()
-        stream1.registerStream()
-        stream2.registerStream()
-
-        val proxy = fStreamProxy<TestStream> {
-            setResultFilter { _, _, results ->
-                assertEquals(2, results.size)
-                assertEquals("0", results[0])
-                assertEquals("1", results[1])
-                results.last()
-            }
-        }
-
-        val result = proxy.getContent("http")
-        assertEquals("1", result)
-
-        stream0.unregisterStream()
-        stream1.unregisterStream()
-        stream2.unregisterStream()
-    }
 }

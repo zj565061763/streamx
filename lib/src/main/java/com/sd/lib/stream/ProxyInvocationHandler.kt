@@ -95,50 +95,33 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 break
             }
 
-            var itemResult: Any?
-            var itemBreakDispatch: Boolean
+            // 调用流对象方法
+            val itemResult: Any? = if (args != null) {
+                method.invoke(stream, *args)
+            } else {
+                method.invoke(stream)
+            }
 
-            connection.getItem(_streamClass).let { item ->
-                synchronized(item) {
-                    item.resetBreakDispatch()
-
-                    // 调用流对象方法
-                    itemResult = if (args != null) {
-                        method.invoke(stream, *args)
-                    } else {
-                        method.invoke(stream)
+            logMsg {
+                buildString {
+                    append("notify")
+                    append(" (${index})")
+                    if (!isVoid) {
+                        append(" -> (${itemResult})")
                     }
-
-                    itemBreakDispatch = item.shouldBreakDispatch
-                    item.resetBreakDispatch()
+                    append(" $stream")
+                    append(" uuid:${uuid}")
                 }
+            }
 
-                logMsg {
-                    buildString {
-                        append("notify")
-                        append(" (${index})")
-                        if (!isVoid) {
-                            append(" -> (${itemResult})")
-                        }
-                        append(" $stream")
-                        append(" break:${itemBreakDispatch}")
-                        append(" uuid:${uuid}")
-                    }
-                }
-
-                result = itemResult.also {
-                    if (filterResult) {
-                        listResult!!.add(it)
-                    }
+            result = itemResult.also {
+                if (filterResult) {
+                    listResult!!.add(it)
                 }
             }
 
             if (_afterDispatch?.dispatch(stream, method, args, itemResult) == true) {
                 logMsg { "dispatch broken after uuid:${uuid}" }
-                break
-            }
-
-            if (itemBreakDispatch) {
                 break
             }
 

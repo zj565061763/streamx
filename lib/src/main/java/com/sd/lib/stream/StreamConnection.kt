@@ -47,19 +47,7 @@ class StreamConnection internal constructor(
         }
     }
 
-    /**
-     * 停止分发
-     */
-    @JvmOverloads
-    fun breakDispatch(clazz: Class<out FStream>? = null) {
-        if (clazz != null) {
-            getItem(clazz).breakDispatch()
-        } else {
-            getSingleItem().breakDispatch()
-        }
-    }
-
-    internal fun getItem(clazz: Class<out FStream>): ConnectionItem {
+    private fun getItem(clazz: Class<out FStream>): ConnectionItem {
         return checkNotNull(_mapItem[clazz]) { "class:${clazz.name} was not found in $stream" }
     }
 
@@ -90,11 +78,6 @@ internal abstract class ConnectionItem {
     var priority = 0
         private set
 
-    /** 是否停止分发  */
-    @Volatile
-    var shouldBreakDispatch = false
-        private set
-
     /**
      * 设置优先级
      */
@@ -110,24 +93,6 @@ internal abstract class ConnectionItem {
             if (changed) {
                 onPriorityChanged(priority)
             }
-        }
-    }
-
-    /**
-     * 设置停止分发
-     */
-    fun breakDispatch() {
-        synchronized(this@ConnectionItem) {
-            shouldBreakDispatch = true
-        }
-    }
-
-    /**
-     * 重置停止分发标志
-     */
-    fun resetBreakDispatch() {
-        synchronized(this@ConnectionItem) {
-            shouldBreakDispatch = false
         }
     }
 
