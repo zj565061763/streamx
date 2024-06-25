@@ -80,13 +80,13 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
         var index = 0
 
         for (stream in listStream) {
-            val connection = FStreamManager.getConnection(stream)
-            if (connection == null) {
-                logMsg { "${StreamConnection::class.java.simpleName} is null uuid:${uuid}" }
+            if (stream.getTagForStream(_streamClass) != _tag) {
                 continue
             }
 
-            if (stream.getTagForStream(_streamClass) != _tag) {
+            val connection = FStreamManager.getConnection(stream)
+            if (connection == null) {
+                logMsg { "${StreamConnection::class.java.simpleName} is null uuid:${uuid}" }
                 continue
             }
 
