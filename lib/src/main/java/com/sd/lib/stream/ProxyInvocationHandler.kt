@@ -78,6 +78,7 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
         var result: Any? = null
         var index = 0
+
         for (stream in listStream) {
             val connection = FStreamManager.getConnection(stream)
             if (connection == null) {
