@@ -11,6 +11,7 @@ import java.lang.reflect.Proxy
 /**
  * 流接口
  */
+@JvmDefaultWithCompatibility
 interface FStream {
     /**
      * 返回当前流对象的tag

@@ -17,7 +17,10 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs += "-module-name=$libGroupId.$libArtifactId"
+        freeCompilerArgs += listOf(
+            "-module-name=$libGroupId.$libArtifactId",
+            "-Xjvm-default=all",
+        )
     }
 
     publishing {
