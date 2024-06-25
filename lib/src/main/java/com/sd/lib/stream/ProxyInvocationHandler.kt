@@ -86,7 +86,12 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
 
             val connection = FStreamManager.getConnection(stream)
             if (connection == null) {
-                logMsg { "${StreamConnection::class.java.simpleName} is null uuid:${uuid}" }
+                logMsg { "${StreamConnection::class.java.simpleName} is null $stream uuid:${uuid}" }
+                continue
+            }
+
+            if (!connection.isConnected()) {
+                logMsg { "connection is disconnected $stream uuid:${uuid}" }
                 continue
             }
 
@@ -95,46 +100,42 @@ internal class ProxyInvocationHandler(builder: ProxyBuilder) : InvocationHandler
                 break
             }
 
-            var itemResult: Any? = null
-            var itemBreakDispatch = false
+            var itemResult: Any?
+            var itemBreakDispatch: Boolean
 
-            if (connection.isConnected()) {
-                connection.getItem(_streamClass).let { item ->
-                    synchronized(item) {
-                        item.resetBreakDispatch()
+            connection.getItem(_streamClass).let { item ->
+                synchronized(item) {
+                    item.resetBreakDispatch()
 
-                        // 调用流对象方法
-                        itemResult = if (args != null) {
-                            method.invoke(stream, *args)
-                        } else {
-                            method.invoke(stream)
-                        }
-
-                        itemBreakDispatch = item.shouldBreakDispatch
-                        item.resetBreakDispatch()
+                    // 调用流对象方法
+                    itemResult = if (args != null) {
+                        method.invoke(stream, *args)
+                    } else {
+                        method.invoke(stream)
                     }
 
-                    logMsg {
-                        buildString {
-                            append("notify")
-                            append(" (${index})")
-                            if (!isVoid) {
-                                append(" -> (${itemResult})")
-                            }
-                            append(" $stream")
-                            append(" break:${itemBreakDispatch}")
-                            append(" uuid:${uuid}")
-                        }
-                    }
+                    itemBreakDispatch = item.shouldBreakDispatch
+                    item.resetBreakDispatch()
+                }
 
-                    result = itemResult.also {
-                        if (filterResult) {
-                            listResult!!.add(it)
+                logMsg {
+                    buildString {
+                        append("notify")
+                        append(" (${index})")
+                        if (!isVoid) {
+                            append(" -> (${itemResult})")
                         }
+                        append(" $stream")
+                        append(" break:${itemBreakDispatch}")
+                        append(" uuid:${uuid}")
                     }
                 }
-            } else {
-                logMsg { "connection is disconnected $stream uuid:${uuid}" }
+
+                result = itemResult.also {
+                    if (filterResult) {
+                        listResult!!.add(it)
+                    }
+                }
             }
 
             if (_afterDispatch?.dispatch(stream, method, args, itemResult) == true) {
